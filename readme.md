@@ -4,7 +4,8 @@ Mission
 Protect public money from fraud, corruption, and wastage by leveraging machine learning, graph analysis, and rule-based systems to flag high-risk transactions in real-time for auditors, vigilance officers, and district administrators.
 
 Key Features:
--> AI-Powered Detection
+-> `AI-Powered Detection`
+
 Isolation Forest – Duplicate beneficiary detection
 
 Local Outlier Factor – Spending anomaly detection
@@ -13,7 +14,8 @@ K-Means Clustering – Vendor cartel identification
 
 Graph Analysis (Neo4j) – Vendor network mapping
 
--> Real-Time Analytics
+-> `Real-Time Analytics`
+
 Live Risk Heatmap – District-wise fraud scores (GIS visualization with Leaflet.js)
 
 Savings Tracker – ₹4.7Cr blocked | 247 ghosts caught | 350 FIRs filed
@@ -22,7 +24,8 @@ Vendor Network Graph – Identify colluding vendors (3+ firms winning 70%+ bids)
 
 Interactive Dashboards – Case management, timeline tracking, ROI analytics
 
--> Rule-Based Flagging
+-> `Rule-Based Flagging`
+
 Deceased Beneficiary Payments – Cross-check with death registry API
 
 Off-Hours Transactions – Flag payments outside business hours
@@ -33,7 +36,8 @@ Repeated Bid Winners – Vendors winning 70%+ of procurements
 
 Shell Company Indicators – Low turnover (₹<5Cr) with high contracts (₹>50Cr)
 
--> Multi-User Workflows
+-> `Multi-User Workflows`
+
 Auditors – Data upload, anomaly investigation, case creation
 
 District Magistrates – District risk overview, heatmap filtering
@@ -42,7 +46,7 @@ Vigilance Officers – Case assignment, field investigations, payment blocking
 
 Admin Dashboard – User management, system health monitoring
 
--> Export & Compliance
+-> `Export & Compliance`
 CAG-Ready PDF Reports – One-click export with evidence & citations
 
 RTI-Compliant Outputs – Public Interest Litigation-ready formats
@@ -72,3 +76,4 @@ Docker & Docker Compose (Containerized microservices)
 Vercel (Frontend CDN)
 
 Thankyou!!
+
