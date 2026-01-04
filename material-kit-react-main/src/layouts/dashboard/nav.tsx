@@ -14,8 +14,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
-
-import { WorkspacesPopover } from '../components/workspaces-popover';
+import { Iconify } from 'src/components/iconify';
 
 import type { NavItem } from '../nav-config-dashboard';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
@@ -44,7 +43,7 @@ export function NavDesktop({
   return (
     <Box
       sx={{
-        pt: 2.5,
+        pt: 0, // Changed from pt: 2.5 to pt: 0
         px: 2.5,
         top: 0,
         left: 0,
@@ -106,16 +105,48 @@ export function NavMobile({
 
 // ----------------------------------------------------------------------
 
+// Account menu items - will appear right below main nav items
+const accountMenuItems = [
+  {
+    title: 'Profile',
+    path: '/profile',
+    icon: <Iconify width={24} icon="solar:user-circle-bold-duotone" />,
+  },
+  {
+    title: 'Settings',
+    path: '/settings',
+    icon: <Iconify width={24} icon="solar:settings-bold-duotone" />,
+  },
+  {
+    title: 'Logout',
+    path: '/sign-in',
+    icon: <Iconify width={24} icon="solar:logout-2-bold-duotone" />,
+    isLogout: true,
+  },
+];
+
 export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
   const pathname = usePathname();
 
+  const handleLogout = () => {
+    console.log('Logging out...');
+    window.location.href = '/sign-in';
+  };
+
   return (
     <>
-      <Logo />
+      {/* Logo centered and bigger */}
+      <Box sx={{ 
+        mt:-2,
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        
+      }}>
+        <Logo sx={{ width: 140, height: 140 }} />
+      </Box>
 
       {slots?.topArea}
-
-      <WorkspacesPopover data={workspaces} sx={{ my: 2 }} />
 
       <Scrollbar fillContent>
         <Box
@@ -137,6 +168,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
               flexDirection: 'column',
             }}
           >
+            {/* Main navigation items */}
             {data.map((item) => {
               const isActived = item.path === pathname;
 
@@ -181,13 +213,88 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
                 </ListItem>
               );
             })}
+
+            {/* Account items - Profile, Settings, Logout (right below main nav) */}
+            {accountMenuItems.map((item) => {
+              const isActived = item.path === pathname;
+
+              if (item.isLogout) {
+                return (
+                  <ListItem disableGutters disablePadding key={item.title}>
+                    <ListItemButton
+                      disableGutters
+                      onClick={handleLogout}
+                      sx={[
+                        (theme) => ({
+                          pl: 2,
+                          py: 1,
+                          gap: 2,
+                          pr: 1.5,
+                          borderRadius: 0.75,
+                          typography: 'body2',
+                          fontWeight: 'fontWeightMedium',
+                          color: theme.vars.palette.text.secondary,
+                          minHeight: 44,
+                          '&:hover': {
+                            bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+                          },
+                        }),
+                      ]}
+                    >
+                      <Box component="span" sx={{ width: 24, height: 24 }}>
+                        {item.icon}
+                      </Box>
+                      <Box component="span" sx={{ flexGrow: 1 }}>
+                        {item.title}
+                      </Box>
+                    </ListItemButton>
+                  </ListItem>
+                );
+              }
+
+              return (
+                <ListItem disableGutters disablePadding key={item.title}>
+                  <ListItemButton
+                    disableGutters
+                    component={RouterLink}
+                    href={item.path}
+                    sx={[
+                      (theme) => ({
+                        pl: 2,
+                        py: 1,
+                        gap: 2,
+                        pr: 1.5,
+                        borderRadius: 0.75,
+                        typography: 'body2',
+                        fontWeight: 'fontWeightMedium',
+                        color: theme.vars.palette.text.secondary,
+                        minHeight: 44,
+                        ...(isActived && {
+                          fontWeight: 'fontWeightSemiBold',
+                          color: theme.vars.palette.primary.main,
+                          bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+                          '&:hover': {
+                            bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.16),
+                          },
+                        }),
+                      }),
+                    ]}
+                  >
+                    <Box component="span" sx={{ width: 24, height: 24 }}>
+                      {item.icon}
+                    </Box>
+                    <Box component="span" sx={{ flexGrow: 1 }}>
+                      {item.title}
+                    </Box>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </Box>
         </Box>
       </Scrollbar>
 
       {slots?.bottomArea}
-
-     
     </>
   );
 }

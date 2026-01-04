@@ -9,6 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -18,11 +19,17 @@ import { Iconify } from 'src/components/iconify';
 export type UserProps = {
   id: string;
   name: string;
-  role: string;
+  aadhaar?: string;
+  scheme?: string;
+  district?: string;
+  riskFlag?: string;
+  riskScore?: number;
+  amount?: number;
   status: string;
-  company: string;
   avatarUrl: string;
   isVerified: boolean;
+  company: string;
+  role: string;
 };
 
 type UserTableRowProps = {
@@ -42,6 +49,18 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     setOpenPopover(null);
   }, []);
 
+  const getRiskColor = (score: number) => {
+    if (score > 70) return 'error';
+    if (score > 50) return 'warning';
+    return 'success';
+  };
+
+  const getStatusColor = (status: string) => {
+    if (status === 'flagged') return 'error';
+    if (status === 'review') return 'warning';
+    return 'success';
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -50,32 +69,54 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </TableCell>
 
         <TableCell component="th" scope="row">
-          <Box
-            sx={{
-              gap: 2,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
             <Avatar alt={row.name} src={row.avatarUrl} />
-            {row.name}
+            <Box>
+              <Box sx={{ fontWeight: 600 }}>{row.name}</Box>
+            </Box>
           </Box>
         </TableCell>
 
-        <TableCell>{row.company}</TableCell>
-
-        <TableCell>{row.role}</TableCell>
-
-        <TableCell align="center">
-          {row.isVerified ? (
-            <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
-          ) : (
-            '-'
-          )}
+        <TableCell sx={{ fontFamily: 'monospace', fontSize: '12px' }}>
+          {row.aadhaar || 'N/A'}
         </TableCell>
 
         <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
+          <Label color="info" variant="soft">
+            {row.scheme || row.role}
+          </Label>
+        </TableCell>
+
+        <TableCell>{row.district || row.company}</TableCell>
+
+        <TableCell>
+          <Label color="error" variant="soft">
+            {row.riskFlag || 'None'}
+          </Label>
+        </TableCell>
+
+        <TableCell align="center">
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={{ fontWeight: 700, color: getRiskColor(row.riskScore || 0) === 'error' ? '#ef4444' : getRiskColor(row.riskScore || 0) === 'warning' ? '#f59e0b' : '#22c55e' }}>
+              {row.riskScore || 0}%
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={row.riskScore || 0}
+              color={getRiskColor(row.riskScore || 0)}
+              sx={{ width: 60, height: 6, borderRadius: 3 }}
+            />
+          </Box>
+        </TableCell>
+
+        <TableCell sx={{ fontWeight: 600 }}>
+          ₹{(row.amount || 0).toLocaleString('en-IN')}
+        </TableCell>
+
+        <TableCell>
+          <Label color={getStatusColor(row.status)}>
+            {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+          </Label>
         </TableCell>
 
         <TableCell align="right">
@@ -97,7 +138,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           sx={{
             p: 0.5,
             gap: 0.5,
-            width: 140,
+            width: 160,
             display: 'flex',
             flexDirection: 'column',
             [`& .${menuItemClasses.root}`]: {
@@ -108,14 +149,21 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
+          <MenuItem onClick={handleClosePopover} sx={{ color: 'primary.main' }}>
+            <Iconify icon="mdi:eye" />
+            View Details
           </MenuItem>
-
+          <MenuItem onClick={handleClosePopover} sx={{ color: 'warning.main' }}>
+            <Iconify icon="mdi:file-document" />
+            Investigate
+          </MenuItem>
+          <MenuItem onClick={handleClosePopover} sx={{ color: 'success.main' }}>
+            <Iconify icon="mdi:check-circle" />
+            Mark Cleared
+          </MenuItem>
           <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            <Iconify icon="mdi:block-helper" />
+            Block Payment
           </MenuItem>
         </MenuList>
       </Popover>
