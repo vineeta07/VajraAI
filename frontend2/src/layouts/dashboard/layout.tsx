@@ -7,8 +7,9 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
-
+// Update the import path to the correct location of your mock data
+import { _langs } from '../../_mock';
+// If '../../_mock' is not correct, adjust the path as needed.
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';

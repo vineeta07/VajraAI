@@ -1,11 +1,13 @@
-import React, { Suspense, useState, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { Share2, FileText, Calculator, Zap, TrendingDown, Users, ShieldAlert } from 'lucide-react';
+import React, { Suspense, useState, useEffect, useRef } from 'react';
+import { Share2, FileText, Calculator, Zap, TrendingDown, ShieldAlert } from 'lucide-react';
 
+import Container from '@mui/material/Container';
+
+import { socket } from '../socket';
 import RiskTable from './RiskTable';
 import { SchemeType } from '../types';
 import GraphNetwork from './GraphNetwork';
-import { socket } from '../socket';
 
 import type { SavingsState } from '../types';
 
@@ -21,7 +23,7 @@ const SCHEME_ORDER: SchemeType[] = [
   SchemeType.PROCUREMENT
 ];
 
-function ProductsView({ darkMode }: ProductsViewProps) {
+export function ProductsView({ darkMode }: ProductsViewProps) {
   const isDarkMode = darkMode;
   const [activeScheme, setActiveScheme] = useState<SchemeType>(SchemeType.ALL);
   const [stats, setStats] = useState<SavingsState>({
@@ -34,7 +36,7 @@ function ProductsView({ darkMode }: ProductsViewProps) {
 
   useEffect(() => {
     // Only set up listeners once
-    if (listenerSetRef.current) return;
+    if (listenerSetRef.current) return undefined;
     listenerSetRef.current = true;
 
     socket.on('savings-updated', (newStats: SavingsState) => {
@@ -94,7 +96,7 @@ function ProductsView({ darkMode }: ProductsViewProps) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '32px' }}>
+    <Container maxWidth="xl" style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '32px' }}>
       <Toaster toastOptions={{ duration: 3000 }} />
       <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
         
@@ -172,7 +174,7 @@ function ProductsView({ darkMode }: ProductsViewProps) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {[
               { label: 'BLOCKED REVENUE', value: formatCurrency(stats.blocked), icon: TrendingDown, bgColor: '#059669' },
-              { label: 'GHOSTS PURGED', value: stats.ghosts.toString(), icon: Users, bgColor: '#dc2626' },
+              { label: 'GHOSTS PURGED', value: stats.ghosts.toString(), icon: ShieldAlert, bgColor: '#dc2626' },
               { label: 'ACTIVE FIRS', value: stats.firs.toString(), icon: ShieldAlert, bgColor: '#9333ea' },
             ].map((item, idx) => (
               <div
@@ -369,8 +371,6 @@ function ProductsView({ darkMode }: ProductsViewProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
-
-export default ProductsView;

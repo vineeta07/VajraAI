@@ -13,8 +13,8 @@ import { usePathname } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { Logo } from 'src/components/logo';
-import { Scrollbar } from 'src/components/scrollbar';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 
 import type { NavItem } from '../nav-config-dashboard';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
@@ -43,8 +43,7 @@ export function NavDesktop({
   return (
     <Box
       sx={{
-        pt: 0, // Changed from pt: 2.5 to pt: 0
-        px: 2.5,
+        px: 2,
         top: 0,
         left: 0,
         height: 1,
@@ -110,17 +109,17 @@ const accountMenuItems = [
   {
     title: 'Profile',
     path: '/profile',
-    icon: <Iconify width={24} icon="solar:user-circle-bold-duotone" />,
+    icon: <Iconify width={24} icon={"solar:user-circle-bold-duotone" as any} />,
   },
   {
     title: 'Settings',
     path: '/settings',
-    icon: <Iconify width={24} icon="solar:settings-bold-duotone" />,
+    icon: <Iconify width={24} icon={"solar:settings-bold-duotone" as any} />,
   },
   {
     title: 'Logout',
     path: '/sign-in',
-    icon: <Iconify width={24} icon="solar:logout-2-bold-duotone" />,
+    icon: <Iconify width={24} icon={"solar:logout-2-bold-duotone" as any} />,
     isLogout: true,
   },
 ];
@@ -142,7 +141,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
         alignItems: 'center',
         
       }}>
-        <Logo sx={{ width: 180, height: 180 }} />
+        <Logo sx={{ width: 230, height: 200 }} />
       </Box>
 
       {slots?.topArea}

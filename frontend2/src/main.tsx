@@ -1,3 +1,4 @@
+import 'leaflet/dist/leaflet.css';
 import './global.css';
 
 import { StrictMode } from 'react';
@@ -8,7 +9,6 @@ import { RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 import App from './app';
 import { routesSection } from './routes/sections';
 import { ErrorBoundary } from './routes/components';
-import 'leaflet/dist/leaflet.css';
 
 // ----------------------------------------------------------------------
 

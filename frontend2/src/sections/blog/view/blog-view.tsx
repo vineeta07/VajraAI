@@ -166,7 +166,7 @@ export function BlogView() {
         <Button
           variant="contained"
           color="error"
-          startIcon={<Iconify icon="mingcute:alert-line" />}
+          startIcon={<Iconify icon="solar:restart-bold" />}
         >
           Report Fraud
         </Button>

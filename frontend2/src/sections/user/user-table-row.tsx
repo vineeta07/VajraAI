@@ -1,15 +1,15 @@
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import LinearProgress from '@mui/material/LinearProgress';
+import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -18,18 +18,11 @@ import { Iconify } from 'src/components/iconify';
 
 export type UserProps = {
   id: string;
-  name: string;
-  aadhaar?: string;
-  scheme?: string;
-  district?: string;
-  riskFlag?: string;
-  riskScore?: number;
-  amount?: number;
+  riskScore: number;
+  reason: string;
+  district: string;
+  scheme: string;
   status: string;
-  avatarUrl: string;
-  isVerified: boolean;
-  company: string;
-  role: string;
 };
 
 type UserTableRowProps = {
@@ -40,6 +33,7 @@ type UserTableRowProps = {
 
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const navigate = useNavigate();
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -56,9 +50,15 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   };
 
   const getStatusColor = (status: string) => {
-    if (status === 'flagged') return 'error';
-    if (status === 'review') return 'warning';
+    if (status === 'Blocked') return 'error';
+    if (status === 'Investigation') return 'warning';
     return 'success';
+  };
+
+  const getSchemeColor = (scheme: string) => {
+    if (scheme === 'Welfare') return 'info';
+    if (scheme === 'Procurement') return 'secondary';
+    return 'warning';
   };
 
   return (
@@ -68,54 +68,43 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
-        <TableCell component="th" scope="row">
-          <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Avatar alt={row.name} src={row.avatarUrl} />
-            <Box>
-              <Box sx={{ fontWeight: 600 }}>{row.name}</Box>
-            </Box>
-          </Box>
-        </TableCell>
-
-        <TableCell sx={{ fontFamily: 'monospace', fontSize: '12px' }}>
-          {row.aadhaar || 'N/A'}
-        </TableCell>
-
-        <TableCell>
-          <Label color="info" variant="soft">
-            {row.scheme || row.role}
-          </Label>
-        </TableCell>
-
-        <TableCell>{row.district || row.company}</TableCell>
-
-        <TableCell>
-          <Label color="error" variant="soft">
-            {row.riskFlag || 'None'}
-          </Label>
+        <TableCell sx={{ fontWeight: 600, fontFamily: 'monospace' }}>
+          {row.id}
         </TableCell>
 
         <TableCell align="center">
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-            <Box sx={{ fontWeight: 700, color: getRiskColor(row.riskScore || 0) === 'error' ? '#ef4444' : getRiskColor(row.riskScore || 0) === 'warning' ? '#f59e0b' : '#22c55e' }}>
-              {row.riskScore || 0}%
+            <Box sx={{ 
+              fontWeight: 700, 
+              color: getRiskColor(row.riskScore) === 'error' ? '#ef4444' : 
+                     getRiskColor(row.riskScore) === 'warning' ? '#f59e0b' : '#22c55e' 
+            }}>
+              {row.riskScore}%
             </Box>
             <LinearProgress
               variant="determinate"
-              value={row.riskScore || 0}
-              color={getRiskColor(row.riskScore || 0)}
+              value={row.riskScore}
+              color={getRiskColor(row.riskScore)}
               sx={{ width: 60, height: 6, borderRadius: 3 }}
             />
           </Box>
         </TableCell>
 
-        <TableCell sx={{ fontWeight: 600 }}>
-          ₹{(row.amount || 0).toLocaleString('en-IN')}
+        <TableCell sx={{ maxWidth: 250 }}>
+          {row.reason}
+        </TableCell>
+
+        <TableCell>{row.district}</TableCell>
+
+        <TableCell>
+          <Label color={getSchemeColor(row.scheme)} variant="soft">
+            {row.scheme}
+          </Label>
         </TableCell>
 
         <TableCell>
           <Label color={getStatusColor(row.status)}>
-            {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+            {row.status}
           </Label>
         </TableCell>
 
@@ -149,20 +138,30 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'primary.main' }}>
-            <Iconify icon="mdi:eye" />
-            View Details
+          <MenuItem
+            onClick={() => {
+              handleClosePopover();
+              navigate('/fraud-news-alerts');
+            }}
+            sx={{ color: 'primary.main' }}
+          >
+            <Iconify icon="solar:eye-bold" />
+            Fraud Alert
           </MenuItem>
           <MenuItem onClick={handleClosePopover} sx={{ color: 'warning.main' }}>
-            <Iconify icon="mdi:file-document" />
+            <Iconify icon="solar:pen-bold" />
             Investigate
           </MenuItem>
           <MenuItem onClick={handleClosePopover} sx={{ color: 'success.main' }}>
-            <Iconify icon="mdi:check-circle" />
+            <Iconify icon="solar:check-circle-bold" />
             Mark Cleared
           </MenuItem>
           <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
-            <Iconify icon="mdi:block-helper" />
+            <Iconify icon="solar:restart-bold" />
+            Block Cleared
+          </MenuItem>
+          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+            <Iconify icon="solar:restart-bold" />
             Block Payment
           </MenuItem>
         </MenuList>
