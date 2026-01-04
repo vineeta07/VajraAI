@@ -4,6 +4,7 @@ Mission
 Protect public money from fraud, corruption, and wastage by leveraging machine learning, graph analysis, and rule-based systems to flag high-risk transactions in real-time for auditors, vigilance officers, and district administrators.
 
 Key Features:
+
 -> `AI-Powered Detection`
 
 Isolation Forest – Duplicate beneficiary detection
