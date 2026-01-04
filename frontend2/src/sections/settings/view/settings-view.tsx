@@ -12,6 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -66,7 +67,7 @@ export function SettingsView() {
         <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              <Iconify icon="solar:bell-bold" sx={{ mr: 1, verticalAlign: 'middle' }} />
+              <Iconify icon="solar:pen-bold" sx={{ mr: 1, verticalAlign: 'middle' }} />
               Notifications
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -105,7 +106,7 @@ export function SettingsView() {
         <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              <Iconify icon="solar:shield-keyhole-bold" sx={{ mr: 1, verticalAlign: 'middle' }} />
+              <Iconify icon="solar:shield-keyhole-bold-duotone" sx={{ mr: 1, verticalAlign: 'middle' }} />
               Security
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -144,7 +145,7 @@ export function SettingsView() {
         <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              <Iconify icon="solar:lock-password-bold" sx={{ mr: 1, verticalAlign: 'middle' }} />
+              <Iconify icon="solar:eye-bold" sx={{ mr: 1, verticalAlign: 'middle' }} />
               Change Password
             </Typography>
             <Divider sx={{ mb: 3 }} />
@@ -176,7 +177,7 @@ export function SettingsView() {
                 color="primary"
                 onClick={handleChangePassword}
                 sx={{ alignSelf: 'flex-start' }}
-                startIcon={<Iconify icon="solar:lock-bold" />}
+                startIcon={<Iconify icon="solar:eye-bold" />}
               >
                 Update Password
               </Button>
@@ -216,7 +217,7 @@ export function SettingsView() {
             variant="contained"
             size="large"
             onClick={handleSaveSettings}
-            startIcon={<Iconify icon="solar:diskette-bold" />}
+            startIcon={<Iconify icon="solar:eye-bold" />}
           >
             Save All Settings
           </Button>

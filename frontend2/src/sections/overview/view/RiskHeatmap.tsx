@@ -202,7 +202,7 @@ const RiskHeatmap: React.FC = () => {
         {selectedWard && (
           <Popup
             position={mapCenter}
-            closeButton={true}
+            closeButton
             maxWidth={280}
             minWidth={240}
           >

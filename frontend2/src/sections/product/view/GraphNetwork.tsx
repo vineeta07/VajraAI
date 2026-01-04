@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 
 import { NETWORK_DATA } from '../constants';
 

@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -62,7 +63,7 @@ export function ProfileView() {
             <Box sx={{ mt: 3 }}>
               <Button
                 variant="outlined"
-                startIcon={<Iconify icon="solar:camera-bold" />}
+                startIcon={<Iconify icon="solar:cart-3-bold" />}
                 size="small"
               >
                 Change Photo
@@ -147,7 +148,7 @@ export function ProfileView() {
                     variant="contained"
                     color="primary"
                     onClick={handleSave}
-                    startIcon={<Iconify icon="solar:diskette-bold" />}
+                    startIcon={<Iconify icon="solar:cart-3-bold" />}
                   >
                     Save Changes
                   </Button>

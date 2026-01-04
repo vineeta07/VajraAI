@@ -141,7 +141,7 @@ export function OverviewAnalyticsView() {
         </Grid>
 
         {/* Anomaly Detection Trends - Monthly */}
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+        <Grid size={{ xs: 12, md: 7, lg: 7 }}>
           <AnalyticsWebsiteVisits
             title="Anomaly Detection Trends"
             subheader="(+23%) detection rate vs last year"
@@ -157,7 +157,7 @@ export function OverviewAnalyticsView() {
         </Grid>
 
         {/* Fraud by Category - Pie Chart */}
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+        <Grid size={{ xs: 12, md: 6, lg: 5 }}>
           <AnalyticsCurrentVisits
             title="Fraud by Category"
             chart={{

@@ -3,118 +3,206 @@ import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { TableNoData } from '../table-no-data';
 import { UserTableRow } from '../user-table-row';
 import { UserTableHead } from '../user-table-head';
-import { TableEmptyRows } from '../table-empty-rows';
 import { UserTableToolbar } from '../user-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
 
-import type { UserProps } from '../user-table-row';
+// ----------------------------------------------------------------------
+
+// Citizen fraud data
+const citizenData = [
+  {
+    id: 'CIT-001',
+    name: 'John Doe',
+    riskScore: 92,
+    reason: 'Multiple Aadhaar linked to same bank account',
+    district: 'Adarsh Nagar',
+    scheme: 'Welfare',
+    status: 'Blocked',
+  },
+  {
+    id: 'CIT-002',
+    name: 'Jane Smith',
+    riskScore: 87,
+    reason: 'Ghost beneficiary - deceased individual',
+    district: 'Narela',
+    scheme: 'Welfare',
+    status: 'Investigation',
+  },
+  {
+    id: 'CIT-003',
+    name: 'Alice Johnson',
+    riskScore: 78,
+    reason: 'Duplicate scholarship claims across schemes',
+    district: 'Model Town',
+    scheme: 'Welfare',
+    status: 'Investigation',
+  },
+  {
+    id: 'CIT-004',
+    name: 'Bob Brown',
+    riskScore: 95,
+    reason: 'Shell company director - bid rigging suspected',
+    district: 'Rohini',
+    scheme: 'Procurement',
+    status: 'Blocked',
+  },
+  {
+    id: 'CIT-005',
+    name: 'Charlie White',
+    riskScore: 65,
+    reason: 'Unusual payment timing pattern',
+    district: 'Dwarka',
+    scheme: 'Spending',
+    status: 'Approved',
+  },
+  {
+    id: 'CIT-006',
+    name: 'Emily Davis',
+    riskScore: 88,
+    reason: 'Same address as 12 registered contractors',
+    district: 'Shahdara',
+    scheme: 'Procurement',
+    status: 'Investigation',
+  },
+  {
+    id: 'CIT-007',
+    name: 'Frank Miller',
+    riskScore: 72,
+    reason: 'Inflated invoice claims detected',
+    district: 'South Delhi',
+    scheme: 'Spending',
+    status: 'Investigation',
+  },
+  {
+    id: 'CIT-008',
+    name: 'Grace Lee',
+    riskScore: 91,
+    reason: 'Non-existent beneficiary address',
+    district: 'East Delhi',
+    scheme: 'Welfare',
+    status: 'Blocked',
+  },
+];
 
 // ----------------------------------------------------------------------
 
 export function UserView() {
-  const table = useTable();
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
+  const [selected, setSelected] = useState<string[]>([]);
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState('id');
 
-  const dataFiltered: UserProps[] = applyFilter({
-    inputData: _users,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName,
-  });
+  const handleChangePage = useCallback((_: unknown, newPage: number) => {
+    setPage(newPage);
+  }, []);
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }, []);
+
+  const handleFilterByName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterName(event.target.value);
+    setPage(0);
+  }, []);
+
+  const handleSort = (id: string) => {
+    const isAsc = orderBy === id && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(id);
+  };
+
+  const handleSelectAllClick = (checked: boolean) => {
+    if (checked) {
+      const newSelected = filteredData.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleSelectRow = (id: string) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const filteredData = citizenData.filter((row) =>
+    row.id.toLowerCase().includes(filterName.toLowerCase()) ||
+    row.reason.toLowerCase().includes(filterName.toLowerCase()) ||
+    row.district.toLowerCase().includes(filterName.toLowerCase())
+  );
 
   return (
     <DashboardContent>
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Users
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button>
+      <Box sx={{ mb: 5 }}>
+        <Typography variant="h4">Citizens Risk List</Typography>
       </Box>
 
       <Card>
         <UserTableToolbar
-          numSelected={table.selected.length}
+          numSelected={selected.length}
           filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
+          onFilterName={handleFilterByName}
         />
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <UserTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={_users.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    _users.map((user) => user.id)
-                  )
-                }
+                order={order}
+                orderBy={orderBy}
+                onSort={handleSort}
+                rowCount={filteredData.length}
+                numSelected={selected.length}
+                onSelectAllRows={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
+                  { id: 'id', label: 'ID' },
+                  { id: 'riskScore', label: 'Risk Score' },
+                  { id: 'reason', label: 'Reason' },
+                  { id: 'district', label: 'District' },
+                  { id: 'scheme', label: 'Scheme' },
                   { id: 'status', label: 'Status' },
-                  { id: '' },
+                  { id: 'actions', label: 'Actions', align: 'right' },
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
+                {filteredData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
                     />
                   ))}
-
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
-                />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
               </TableBody>
             </Table>
           </TableContainer>
@@ -122,82 +210,14 @@ export function UserView() {
 
         <TablePagination
           component="div"
-          page={table.page}
-          count={_users.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
+          page={page}
+          count={filteredData.length}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
     </DashboardContent>
   );
-}
-
-// ----------------------------------------------------------------------
-
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const onSort = useCallback(
-    (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    },
-    [order, orderBy]
-  );
-
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
-    if (checked) {
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
-
-      setSelected(newSelected);
-    },
-    [selected]
-  );
-
-  const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
-
-  const onChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const onChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
-    },
-    [onResetPage]
-  );
-
-  return {
-    page,
-    order,
-    onSort,
-    orderBy,
-    selected,
-    rowsPerPage,
-    onSelectRow,
-    onResetPage,
-    onChangePage,
-    onSelectAllRows,
-    onChangeRowsPerPage,
-  };
 }

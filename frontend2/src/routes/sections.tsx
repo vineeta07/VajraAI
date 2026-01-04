@@ -54,7 +54,7 @@ export const routesSection: RouteObject[] = [
       { index: true, element: <DashboardPage /> },
       { path: 'citizens', element: <CitizensPage /> },
       { path: 'investigation', element: <InvestigationPage /> },
-      { path: 'recent-frauds', element: <RecentFraudsPage /> },
+      { path: 'fraud-alerts', element: <RecentFraudsPage /> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'settings', element: <SettingsPage /> },
     ],
