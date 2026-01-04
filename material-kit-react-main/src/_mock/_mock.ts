@@ -1,7 +1,6 @@
 export const _id = (index: number) => `e99f09a7-dd88-49d5-b1c8-1daf80c2d7b${index}`;
 
 export const _times = (index: number) =>
-  // 'MM/DD/YYYY'
   [
     '11/08/2023',
     '04/09/2024',
@@ -29,32 +28,33 @@ export const _times = (index: number) =>
     '08/09/2024',
   ][index];
 
+// Indian names for fraud detection context
 export const _fullName = (index: number) =>
   [
-    'Billy Stoltenberg',
-    'Eloise Ebert',
-    'Teresa Luettgen',
-    'Salvador Mayert',
-    'Dr. Guadalupe Rath',
-    'Kelvin Pouros',
-    'Thelma Langworth',
-    'Kristen Wunsch',
-    'Steve Welch',
-    'Brian Jacobs',
-    'Lillie Schultz',
-    'Mr. Conrad Spinka',
-    'Charlene Krajcik',
-    'Kerry Kuhlman',
-    'Betty Hammes',
-    'Tony Paucek PhD',
-    'Sherri Davis',
-    'Angel Rolfson-Kulas',
-    'Dr. Lee Doyle-Grant',
-    'Cheryl Romaguera',
-    'Billy Braun',
-    'Adam Trantow',
-    'Brandon Von',
-    'Willis Ankunding',
+    'Rajesh Kumar Singh',
+    'Priya Sharma',
+    'Amit Patel',
+    'Sunita Devi',
+    'Mohammed Hussain',
+    'Lakshmi Narayanan',
+    'Vikram Malhotra',
+    'Anita Kumari',
+    'Suresh Yadav',
+    'Kavita Reddy',
+    'Ramesh Gupta',
+    'Meena Kumari',
+    'Arun Joshi',
+    'Rekha Verma',
+    'Sanjay Tiwari',
+    'Pooja Agarwal',
+    'Manoj Kumar',
+    'Deepa Nair',
+    'Ravi Shankar',
+    'Geeta Devi',
+    'Ashok Mishra',
+    'Kamla Devi',
+    'Vijay Pandey',
+    'Shanti Devi',
   ][index];
 
 export const _price = (index: number) =>
@@ -63,32 +63,33 @@ export const _price = (index: number) =>
     25.93, 70.39, 23.11, 67.23, 14.31, 31.5, 26.72, 44.8, 37.87, 75.53,
   ][index];
 
+// Government departments for fraud context
 export const _company = (index: number) =>
   [
-    'Medhurst, Moore and Franey',
-    'Hahn, Homenick and Lind',
-    'Larkin LLC',
-    'Stamm, Larson and Mertz',
-    'Spencer, Raynor and Langosh',
-    'Lehner - Feeney',
-    'Leuschke, Harris and Kuhlman',
-    'Gutmann - Kassulke',
-    'Turcotte - Runolfsson',
-    'Howe - Anderson',
-    'Sipes - Yost',
-    'Johns - Aufderhar',
-    'Schmidt LLC',
-    'Smitham - Gerlach',
-    'Waelchi - VonRueden',
-    'Padberg - Macejkovic',
-    'Lemke - Ferry',
-    'Koch and Sons',
-    'Klein - Rolfson',
-    'Weimann LLC',
-    'White, Cassin and Goldner',
-    'Mohr, Langworth and Hills',
-    'Mitchell, Volkman and Prosacco',
-    'Streich Group',
+    'Public Works Department',
+    'Education Ministry',
+    'Health Department',
+    'Agriculture Ministry',
+    'Urban Development',
+    'Rural Development',
+    'Social Welfare',
+    'Transport Department',
+    'Revenue Department',
+    'Home Affairs',
+    'Finance Ministry',
+    'Labour Ministry',
+    'Water Resources',
+    'Power Department',
+    'Food & Civil Supplies',
+    'Women & Child Development',
+    'Tribal Affairs',
+    'Minority Affairs',
+    'Housing Ministry',
+    'Skill Development',
+    'IT Department',
+    'Environment Ministry',
+    'Petroleum Ministry',
+    'Textiles Ministry',
   ][index];
 
 export const _boolean = (index: number) =>
@@ -122,12 +123,12 @@ export const _boolean = (index: number) =>
 export const _postTitles = (index: number) =>
   [
     'Whiteboard Templates By Industry Leaders',
-    'Tesla Cybertruck-inspired camper trailer for Tesla fans who can’t just wait for the truck!',
+    'Tesla Cybertruck-inspired camper trailer for Tesla fans who can\'t just wait for the truck!',
     'Designify Agency Landing Page Design',
     '✨What is Done is Done ✨',
     'Fresh Prince',
     'Six Socks Studio',
-    'vincenzo de cotiis’ crossing over showcases a research on contamination',
+    'vincenzo de cotiis\' crossing over showcases a research on contamination',
     'Simple, Great Looking Animations in Your Project | Video Tutorial',
     '40 Free Serif Fonts for Digital Designers',
     'Examining the Evolution of the Typical Web Design Client',
@@ -138,12 +139,12 @@ export const _postTitles = (index: number) =>
     'How to create a client-serverless Jamstack app using Netlify, Gatsby and Fauna',
     'Tylko Organise effortlessly -3D & Motion Design',
     'RAYO ?? A expanded visual arts festival identity',
-    'Anthony Burrill and Wired mag’s Andrew Diprose discuss how they made January’s Change Everything cover',
+    'Anthony Burrill and Wired mag\'s Andrew Diprose discuss how they made January\'s Change Everything cover',
     'Inside the Mind of Samuel Day',
     'Portfolio Review: Is This Portfolio Too Creative?',
     'Akkers van Margraten',
     'Gradient Ticket icon',
-    'Here’s a Dyson motorcycle concept that doesn’t ‘suck’!',
+    'Here\'s a Dyson motorcycle concept that doesn\'t \'suck\'!',
     'How to Animate a SVG with border-image',
   ][index];
 

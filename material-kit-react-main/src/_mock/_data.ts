@@ -99,20 +99,20 @@ export const _products = [...Array(24)].map((_, index) => {
 // ----------------------------------------------------------------------
 
 export const _langs = [
-  {
+ {
     value: 'en',
     label: 'English',
-    icon: '/assets/icons/flags/ic-flag-en.svg',
+    icon: '/assets/icons/flags/english.svg',
   },
   {
-    value: 'de',
-    label: 'German',
-    icon: '/assets/icons/flags/ic-flag-de.svg',
+    value: 'hi',
+    label: 'Hindi',
+    icon: '/assets/icons/flags/hindi.svg',
   },
   {
-    value: 'fr',
-    label: 'French',
-    icon: '/assets/icons/flags/ic-flag-fr.svg',
+    value: 'ta',
+    label: 'Tamil',
+    icon: '/assets/icons/flags/tamil.svg',
   },
 ];
 

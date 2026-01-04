@@ -23,7 +23,7 @@ export default function App({ children }: AppProps) {
     <Fab
       size="medium"
       aria-label="Github"
-      href="https://github.com/minimal-ui-kit/material-kit-react"
+      href="https://github.com/vineeta07/Hack4Delhi" // Change this to your GitHub repo URL this to your GitHub repo URL
       sx={{
         zIndex: 9,
         right: 20,

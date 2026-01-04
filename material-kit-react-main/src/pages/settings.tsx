@@ -1,16 +1,15 @@
-
 import { CONFIG } from 'src/config-global';
 
-import { BlogView } from 'src/sections/blog/view';
+import { SettingsView } from 'src/sections/settings/view';
 
 // ----------------------------------------------------------------------
 
 export default function Page() {
   return (
     <>
-      <title>{`Fraud Alerts / News - ${CONFIG.appName}`}</title>
+      <title>{`Settings - ${CONFIG.appName}`}</title>
 
-      <BlogView />
+      <SettingsView />
     </>
   );
 }

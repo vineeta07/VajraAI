@@ -1,4 +1,3 @@
-
 import { SavingsState } from './types';
 
 type Callback = (data: any) => void;
@@ -8,7 +7,16 @@ class MockSocket {
 
   on(event: string, cb: Callback) {
     if (!this.listeners[event]) this.listeners[event] = [];
-    this.listeners[event].push(cb);
+    // Prevent duplicate listeners by clearing first
+    this.listeners[event] = [cb];
+  }
+
+  off(event: string, cb?: Callback) {
+    if (cb && this.listeners[event]) {
+      this.listeners[event] = this.listeners[event].filter(fn => fn !== cb);
+    } else {
+      this.listeners[event] = [];
+    }
   }
 
   emit(event: string, data: any) {
