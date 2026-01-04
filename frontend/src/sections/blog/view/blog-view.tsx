@@ -166,7 +166,7 @@ export function BlogView() {
         <Button
           variant="contained"
           color="error"
-          startIcon={<Iconify icon="solar:restart-bold" />}
+          startIcon={<Iconify icon="solar:eye-bold" />}
         >
           Report Fraud
         </Button>
