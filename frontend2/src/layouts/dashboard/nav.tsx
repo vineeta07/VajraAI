@@ -137,13 +137,12 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
     <>
       {/* Logo centered and bigger */}
       <Box sx={{ 
-        mt:-2,
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center',
         
       }}>
-        <Logo sx={{ width: 140, height: 140 }} />
+        <Logo sx={{ width: 180, height: 180 }} />
       </Box>
 
       {slots?.topArea}
