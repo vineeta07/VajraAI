@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { Heatmap } from '../Heatmap';
 
 export function AnalyticsPanel() {
   const [categoryData, setCategoryData] = useState<any[]>([]);
@@ -136,6 +137,15 @@ export function AnalyticsPanel() {
                 <Line yAxisId="right" type="monotone" dataKey="amount" stroke="hsl(38, 92%, 50%)" strokeWidth={2} dot={{ fill: 'hsl(38, 92%, 50%)' }} />
               </LineChart>
             </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-card border-border lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg">Fraud Activity Heatmap</CardTitle>
+            <p className="text-sm text-muted-foreground">Incident frequency by day and hour</p>
+          </CardHeader>
+          <CardContent>
+            <Heatmap />
           </CardContent>
         </Card>
       </div>

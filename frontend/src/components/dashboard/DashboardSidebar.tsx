@@ -1,6 +1,5 @@
-import { LayoutDashboard, FileWarning, TrendingUp, Settings, LogOut, Shield } from 'lucide-react';
+import { LayoutDashboard, FileWarning, TrendingUp, Settings, Shield } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import {
   Sidebar,
   SidebarContent,
@@ -10,9 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 
 const menuItems = [
   { title: 'Overview', url: '/dashboard', icon: LayoutDashboard },
@@ -22,14 +19,8 @@ const menuItems = [
 ];
 
 export function DashboardSidebar() {
-  const { signOut, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
 
   return (
     <Sidebar className="border-r border-border">
@@ -66,23 +57,6 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter className="border-t border-border p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-xs font-medium text-primary">
-              {user?.email?.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.email}</p>
-          </div>
-        </div>
-        <Button variant="outline" size="sm" className="w-full" onClick={handleSignOut}>
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
-      </SidebarFooter>
     </Sidebar>
   );
 }

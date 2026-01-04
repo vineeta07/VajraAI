@@ -1,21 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, AlertCircle } from 'lucide-react';
-import { z } from 'zod';
-
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-const signupSchema = loginSchema.extend({
-  fullName: z.string().min(2, 'Name must be at least 2 characters'),
-});
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,53 +14,31 @@ const Auth = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
-  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    try {
-      if (isLogin) {
-        const result = loginSchema.safeParse({ email, password });
-        if (!result.success) {
-          setError(result.error.errors[0].message);
-          setLoading(false);
-          return;
-        }
-        const { error } = await signIn(email, password);
-        if (error) {
-          setError(error.message);
-        }
-      } else {
-        const result = signupSchema.safeParse({ email, password, fullName });
-        if (!result.success) {
-          setError(result.error.errors[0].message);
-          setLoading(false);
-          return;
-        }
-        const { error } = await signUp(email, password, fullName);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            setError('This email is already registered. Please sign in instead.');
-          } else {
-            setError(error.message);
-          }
-        }
-      }
-    } catch (err) {
-      setError('An unexpected error occurred');
-    } finally {
+    // Simple validation
+    if (!email || !password) {
+      setError('Please fill in all fields');
       setLoading(false);
+      return;
     }
+
+    if (!isLogin && !fullName) {
+      setError('Please enter your name');
+      setLoading(false);
+      return;
+    }
+
+    // Simulate login/signup - navigate to dashboard
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/dashboard');
+    }, 500);
   };
 
   return (
