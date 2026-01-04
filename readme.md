@@ -1,4 +1,4 @@
-VajraAI is an intelligent, real-time fraud detection and anomaly identification system designed specifically for Indian government spending, procurement, welfare delivery, and contract management. Built with cutting-edge AI/ML techniques, it detects irregularities in government transactions with 92% faster audits and zero human oversight bias.
+It is an intelligent, real-time fraud detection and anomaly identification system designed specifically for Indian government spending, procurement, welfare delivery, and contract management. Built with cutting-edge AI/ML techniques, it detects irregularities in government transactions with 92% faster audits and zero human oversight bias.
 
 Mission
 Protect public money from fraud, corruption, and wastage by leveraging machine learning, graph analysis, and rule-based systems to flag high-risk transactions in real-time for auditors, vigilance officers, and district administrators.
@@ -76,4 +76,5 @@ Docker & Docker Compose (Containerized microservices)
 Vercel (Frontend CDN)
 
 Thankyou!!
+
 
