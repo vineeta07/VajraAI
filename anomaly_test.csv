@@ -1,0 +1,13 @@
+transaction_id,date,agency,vendor_id,contract_type,amount,description,currency,is_anomaly
+8cc6c2ef,2025-06-08,Ministry of Health & Family Welfare,Adani Enterprises,Lump Sum,1757363.42,Procurement of vaccines,INR,0
+c2dea911,2025-04-18,Ministry of Rural Development,Patanjali Ayurved,Consultancy,1877199.02,Road construction under PMGSY,INR,0
+ea761fb3,2025-02-07,Ministry of Health & Family Welfare,Adani Enterprises,EPC (Engineering Procurement Construction),223233.84,Supply of medical equipment for AIIMS,INR,0
+775a8742,2025-03-12,Ministry of Defence,Shapoorji Pallonji Group,Consultancy,1397562.86,Maintenance of cantonment roads,INR,0
+1badb7ac,2025-05-25,Ministry of Defence,Larsen & Toubro Ltd,Item Rate,3890385.38,Supply of high-altitude clothing,INR,0
+3085f5c8,2025-04-01,NHAI (National Highways Authority of India),Shapoorji Pallonji Group,Consultancy,312558.07,Road safety consultancy services,INR,0
+d1287c8a,2025-09-28,NHAI (National Highways Authority of India),Bharat Electronics Ltd,EPC (Engineering Procurement Construction),3540647.45,Construction of 4-lane highway section km 10-50,INR,0
+b69c04f2,2025-05-13,CPWD (Central Public Works Department),Bharat Electronics Ltd,Consultancy,1868277.65,Horticulture works for central vista,INR,0
+9b87ad3e,2025-03-17,Ministry of Defence,Patanjali Ayurved,Consultancy,90001.45,Maintenance of cantonment roads,INR,0
+aa168225,2025-07-25,Ministry of Rural Development,Larsen & Toubro Ltd,Consultancy,992502.31,Road construction under PMGSY,INR,0
+fraud-001,2025-01-01,Ministry of Defence,Vendor_Unknown_99,Item Rate,999999999.0,Ghost supply delivery for non-existent site,INR,1
+fraud-002,2025-01-02,Ministry of Health & Family Welfare,Vendor_X,Consultancy,500.0,Facilitation fee for clearance,INR,1
