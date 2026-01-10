@@ -23,9 +23,7 @@
 /** **************************************
 * Baseline
 *************************************** */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 html {
   height: 100%;
