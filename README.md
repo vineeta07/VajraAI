@@ -1,6 +1,6 @@
-# VajraAI - AI-Powered Financial Fraud Detection System
+# VajraAI - AI-Powered Public Spending Anomaly Detection
 
-VajraAI is an advanced fraud detection platform designed to identify anomalies in financial transactions, specifically targeting procurement fraud and bid rigging. It leverages a modern tech stack with a React frontend, Node.js/Express backend, and a Python-based ML detection service.
+VajraAI is an advanced detection platform designed to identify fraud, irregularities, and anomalies in government spending, procurement, welfare delivery, and public contracts. The system combines domain-aware feature engineering, unsupervised models (e.g., Transformer autoencoders), graph/network analysis for collusion and bid-rigging detection, and a rules engine with human-in-the-loop workflows for prioritization and investigation. Emphasis is placed on explainability, data enrichment, operational monitoring, and secure handling of sensitive data. The implementation uses a modern stack with a React frontend, Node.js/Express backend, and a Python-based ML service.
 
 ## 🚀 Features
 
