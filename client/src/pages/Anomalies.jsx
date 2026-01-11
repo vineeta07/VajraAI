@@ -1,22 +1,32 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AlertOctagon, Filter } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export default function Anomalies() {
     const [anomalies, setAnomalies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('');
+    const [searchParams] = useSearchParams();
+    const [locationFilter, setLocationFilter] = useState(searchParams.get('location') || '');
+
+    useEffect(() => {
+        const loc = searchParams.get('location');
+        setLocationFilter(loc || '');
+    }, [searchParams]);
 
     useEffect(() => {
         fetchAnomalies();
-    }, [filter]);
+    }, [filter, locationFilter]);
 
     const fetchAnomalies = async () => {
         setLoading(true);
         try {
-            const url = filter ? `/api/anomalies?risk=${filter}` : '/api/anomalies';
-            const res = await axios.get(url);
+            const params = new URLSearchParams();
+            if (filter) params.append('risk', filter);
+            if (locationFilter) params.append('location', locationFilter);
+
+            const res = await axios.get(`/api/anomalies?${params.toString()}`);
             setAnomalies(res.data);
         } catch (error) {
             console.error(error);
@@ -36,7 +46,26 @@ export default function Anomalies() {
     return (
         <div className="space-y-6">
             <div className="sm:flex sm:items-center sm:justify-between">
-                <h1 className="text-2xl font-semibold text-gray-900">Detected Anomalies</h1>
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-900">Detected Anomalies</h1>
+                    {locationFilter && (
+                        <div className="mt-1 flex items-center">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                Location: {locationFilter}
+                                <button
+                                    type="button"
+                                    className="flex-shrink-0 ml-1.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white"
+                                    onClick={() => setLocationFilter('')}
+                                >
+                                    <span className="sr-only">Remove location filter</span>
+                                    <svg className="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                                        <path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
+                                    </svg>
+                                </button>
+                            </span>
+                        </div>
+                    )}
+                </div>
 
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                     <div className="relative inline-block text-left">
@@ -79,8 +108,8 @@ export default function Anomalies() {
                                         <tr><td colSpan="6" className="p-4 text-center">No anomalies found.</td></tr>
                                     ) : (
                                         anomalies.map((item) => (
-                                            <tr key={item.transaction_id}>
-                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                            <tr key={item.transaction_id} className="hover:bg-gray-50 cursor-pointer transition-colors" role="button" onClick={() => window.location.href = `/anomalies/${item.transaction_id}`}>
+                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-600 sm:pl-6">
                                                     #{item.transaction_id}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -97,8 +126,10 @@ export default function Anomalies() {
                                                         {item.risk_level}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" title={JSON.stringify(item.reason)}>
-                                                    {JSON.stringify(item.reason).substring(0, 50)}...
+                                                <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
+                                                    <div className="flex items-center text-xs text-indigo-500 hover:text-indigo-700">
+                                                        View Details &rarr;
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))

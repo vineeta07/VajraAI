@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Upload from './pages/Upload';
 import Analyze from './pages/Analyze';
 import Anomalies from './pages/Anomalies';
+import AnomalyDetail from './pages/AnomalyDetail';
 import Heatmap from './pages/Heatmap';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/upload" element={<Upload />} />
         <Route path="/analyze" element={<Analyze />} />
         <Route path="/anomalies" element={<Anomalies />} />
+        <Route path="/anomalies/:id" element={<AnomalyDetail />} />
         <Route path="/heatmap" element={<Heatmap />} />
       </Route>
     </Routes>
