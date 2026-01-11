@@ -17,6 +17,17 @@ router.get("/", async (req, res) => {
       params.push(risk);
     }
 
+    const { location } = req.query;
+    if (location) {
+      // If WHERE clause already exists (because risk was present), use AND
+      if (params.length > 0) {
+        query += " AND t.location = $" + (params.length + 1);
+      } else {
+        query += " WHERE t.location = $1";
+      }
+      params.push(location);
+    }
+
     query += " ORDER BY a.anomaly_score ASC";
     const { rows } = await pool.query(query, params);
 
