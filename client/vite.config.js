@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://hack4delhi-fgm5.onrender.com',
+        target: 'https://vajraai-backend.onrender.com',
         changeOrigin: true,
       },
     },
