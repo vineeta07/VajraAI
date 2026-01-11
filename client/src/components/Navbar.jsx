@@ -7,7 +7,8 @@ import {
     AlertOctagon,
     Map,
     LogOut,
-    ShieldCheck
+    ShieldCheck,
+    Building2
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -19,6 +20,7 @@ export default function Navbar() {
         { name: 'Dashboard', path: '/', icon: LayoutDashboard },
         { name: 'Upload', path: '/upload', icon: Upload },
         { name: 'Analyze', path: '/analyze', icon: ScanSearch },
+        { name: 'Vendors', path: '/vendors', icon: Building2 },
         { name: 'Anomalies', path: '/anomalies', icon: AlertOctagon },
         { name: 'Heatmap', path: '/heatmap', icon: Map },
     ];

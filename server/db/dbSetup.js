@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS transactions (
   amount NUMERIC(15,2) NOT NULL CHECK (amount >= 0),
   location VARCHAR(100),
   transaction_date DATE NOT NULL,
+  estimated_cost NUMERIC(15,2),
+  num_bidders INT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -29,7 +29,8 @@ router.post("/", async (req, res) => {
         ...result,
         amount: Number(tx.amount),
         avg_amount: tx.amount,
-        frequency: 1
+        frequency: 1,
+        derived_metrics: result.derived_metrics
       });
 
       await pool.query(

@@ -9,6 +9,8 @@ import Analyze from './pages/Analyze';
 import Anomalies from './pages/Anomalies';
 import AnomalyDetail from './pages/AnomalyDetail';
 import Heatmap from './pages/Heatmap';
+import Vendors from './pages/Vendors';
+import VendorDetail from './pages/VendorDetail';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/anomalies" element={<Anomalies />} />
         <Route path="/anomalies/:id" element={<AnomalyDetail />} />
         <Route path="/heatmap" element={<Heatmap />} />
+        <Route path="/vendors" element={<Vendors />} />
+        <Route path="/vendors/:id" element={<VendorDetail />} />
       </Route>
     </Routes>
   );

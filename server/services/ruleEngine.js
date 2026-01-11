@@ -6,9 +6,21 @@ function generateReasons({
   vendor_name,
   location,
   anomaly_score,
-  risk_level
+  risk_level,
+  derived_metrics
 }) {
   const reasons = [];
+
+  if (derived_metrics) {
+    if (derived_metrics.overspend_ratio > 0.5) {
+      reasons.push(
+        `Significant cost overrun detected (${(derived_metrics.overspend_ratio * 100).toFixed(0)}% above estimate)`
+      );
+    }
+    if (derived_metrics.bidders !== undefined && derived_metrics.bidders !== null && derived_metrics.bidders <= 1) {
+      reasons.push("Single bidder usage detected for contract - potential rigging risk");
+    }
+  }
 
   if (avg_amount && amount > avg_amount * 4) {
     reasons.push(

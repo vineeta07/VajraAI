@@ -127,7 +127,7 @@ export default function RiskMap({ data }) {
                                 <div className="p-1 cursor-pointer" onClick={() => navigate(`/anomalies?location=${encodeURIComponent(city.name)}`)}>
                                     <span className="font-bold text-base">{city.name}</span>
                                     <br />
-                                    <span className="text-gray-600">Flagged Cases:</span> <span className="font-bold text-red-600">{city.value}</span>
+                                    <span className="text-gray-600">Total Cases:</span> <span className="font-bold text-red-600">{city.value}</span>
                                     <br />
                                     <span className="text-xs text-indigo-600 font-semibold mt-1 inline-block">Click for details &rarr;</span>
                                 </div>
