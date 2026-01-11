@@ -19,7 +19,10 @@ app.listen(PORT, () => {
     console.log(`Server running on PORT: ${PORT}`);
 })
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://hack4-delhi-weld.vercel.app',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
