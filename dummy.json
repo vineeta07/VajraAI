@@ -1,0 +1,61 @@
+[
+  { "vendor_id": "V001", "vendor_name": "ABC Infra Pvt Ltd", "department": "Health", "amount": 420000, "location": "Delhi", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V001", "vendor_name": "ABC Infra Pvt Ltd", "department": "Health", "amount": 430000, "location": "Delhi", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V001", "vendor_name": "ABC Infra Pvt Ltd", "department": "Health", "amount": 440000, "location": "Delhi", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V001", "vendor_name": "ABC Infra Pvt Ltd", "department": "Health", "amount": 460000, "location": "Delhi", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V001", "vendor_name": "ABC Infra Pvt Ltd", "department": "Health", "amount": 480000, "location": "Delhi", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V002", "vendor_name": "Shakti Supplies", "department": "Education", "amount": 110000, "location": "Mumbai", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V002", "vendor_name": "Shakti Supplies", "department": "Education", "amount": 115000, "location": "Mumbai", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V002", "vendor_name": "Shakti Supplies", "department": "Education", "amount": 120000, "location": "Mumbai", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V002", "vendor_name": "Shakti Supplies", "department": "Education", "amount": 125000, "location": "Mumbai", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V002", "vendor_name": "Shakti Supplies", "department": "Education", "amount": 130000, "location": "Mumbai", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V003", "vendor_name": "Reliable Pharma", "department": "Health", "amount": 900000, "location": "Delhi", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V003", "vendor_name": "Reliable Pharma", "department": "Health", "amount": 950000, "location": "Delhi", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V003", "vendor_name": "Reliable Pharma", "department": "Health", "amount": 980000, "location": "Delhi", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V003", "vendor_name": "Reliable Pharma", "department": "Health", "amount": 5100000, "location": "Delhi", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V003", "vendor_name": "Reliable Pharma", "department": "Health", "amount": 5200000, "location": "Delhi", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V004", "vendor_name": "Green Earth NGO", "department": "Welfare", "amount": 28000, "location": "Jaipur", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V004", "vendor_name": "Green Earth NGO", "department": "Welfare", "amount": 30000, "location": "Jaipur", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V004", "vendor_name": "Green Earth NGO", "department": "Welfare", "amount": 32000, "location": "Jaipur", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V004", "vendor_name": "Green Earth NGO", "department": "Welfare", "amount": 34000, "location": "Jaipur", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V004", "vendor_name": "Green Earth NGO", "department": "Welfare", "amount": 36000, "location": "Jaipur", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V005", "vendor_name": "Sunrise Tech", "department": "IT", "amount": 210000, "location": "Bengaluru", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V005", "vendor_name": "Sunrise Tech", "department": "IT", "amount": 220000, "location": "Bengaluru", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V005", "vendor_name": "Sunrise Tech", "department": "IT", "amount": 230000, "location": "Bengaluru", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V005", "vendor_name": "Sunrise Tech", "department": "IT", "amount": 240000, "location": "Bengaluru", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V005", "vendor_name": "Sunrise Tech", "department": "IT", "amount": 250000, "location": "Bengaluru", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V006", "vendor_name": "Rural Aid Trust", "department": "Welfare", "amount": 25000, "location": "Patna", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V006", "vendor_name": "Rural Aid Trust", "department": "Welfare", "amount": 26000, "location": "Patna", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V006", "vendor_name": "Rural Aid Trust", "department": "Welfare", "amount": 27000, "location": "Patna", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V006", "vendor_name": "Rural Aid Trust", "department": "Welfare", "amount": 29000, "location": "Patna", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V006", "vendor_name": "Rural Aid Trust", "department": "Welfare", "amount": 30000, "location": "Patna", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V007", "vendor_name": "MegaBuild Constructions", "department": "Infrastructure", "amount": 8200000, "location": "Noida", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V007", "vendor_name": "MegaBuild Constructions", "department": "Infrastructure", "amount": 8300000, "location": "Noida", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V007", "vendor_name": "MegaBuild Constructions", "department": "Infrastructure", "amount": 8400000, "location": "Noida", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V007", "vendor_name": "MegaBuild Constructions", "department": "Infrastructure", "amount": 8500000, "location": "Noida", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V007", "vendor_name": "MegaBuild Constructions", "department": "Infrastructure", "amount": 8600000, "location": "Noida", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V008", "vendor_name": "Urban Works Ltd", "department": "Infrastructure", "amount": 1500000, "location": "Gurgaon", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V008", "vendor_name": "Urban Works Ltd", "department": "Infrastructure", "amount": 1550000, "location": "Gurgaon", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V008", "vendor_name": "Urban Works Ltd", "department": "Infrastructure", "amount": 1600000, "location": "Gurgaon", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V008", "vendor_name": "Urban Works Ltd", "department": "Infrastructure", "amount": 1650000, "location": "Gurgaon", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V008", "vendor_name": "Urban Works Ltd", "department": "Infrastructure", "amount": 1700000, "location": "Gurgaon", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V009", "vendor_name": "QuickServe Services", "department": "IT", "amount": 950000, "location": "Hyderabad", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V009", "vendor_name": "QuickServe Services", "department": "IT", "amount": 960000, "location": "Hyderabad", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V009", "vendor_name": "QuickServe Services", "department": "IT", "amount": 970000, "location": "Hyderabad", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V009", "vendor_name": "QuickServe Services", "department": "IT", "amount": 980000, "location": "Hyderabad", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V009", "vendor_name": "QuickServe Services", "department": "IT", "amount": 990000, "location": "Hyderabad", "transaction_date": "2025-01-05" },
+
+  { "vendor_id": "V010", "vendor_name": "CityClean Solutions", "department": "Welfare", "amount": 40000, "location": "Delhi", "transaction_date": "2025-01-01" },
+  { "vendor_id": "V010", "vendor_name": "CityClean Solutions", "department": "Welfare", "amount": 42000, "location": "Delhi", "transaction_date": "2025-01-02" },
+  { "vendor_id": "V010", "vendor_name": "CityClean Solutions", "department": "Welfare", "amount": 44000, "location": "Delhi", "transaction_date": "2025-01-03" },
+  { "vendor_id": "V010", "vendor_name": "CityClean Solutions", "department": "Welfare", "amount": 46000, "location": "Delhi", "transaction_date": "2025-01-04" },
+  { "vendor_id": "V010", "vendor_name": "CityClean Solutions", "department": "Welfare", "amount": 48000, "location": "Delhi", "transaction_date": "2025-01-05" }
+]

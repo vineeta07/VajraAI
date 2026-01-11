@@ -1,0 +1,51 @@
+vendor_id,vendor_name,department,amount,location,transaction_date
+V001,ABC Infra Pvt Ltd,Health,420000,Delhi,2025-01-01
+V001,ABC Infra Pvt Ltd,Health,430000,Delhi,2025-01-02
+V001,ABC Infra Pvt Ltd,Health,440000,Delhi,2025-01-03
+V001,ABC Infra Pvt Ltd,Health,460000,Delhi,2025-01-04
+V001,ABC Infra Pvt Ltd,Health,480000,Delhi,2025-01-05
+V002,Shakti Supplies,Education,110000,Mumbai,2025-01-01
+V002,Shakti Supplies,Education,115000,Mumbai,2025-01-02
+V002,Shakti Supplies,Education,120000,Mumbai,2025-01-03
+V002,Shakti Supplies,Education,125000,Mumbai,2025-01-04
+V002,Shakti Supplies,Education,130000,Mumbai,2025-01-05
+V003,Reliable Pharma,Health,900000,Delhi,2025-01-01
+V003,Reliable Pharma,Health,950000,Delhi,2025-01-02
+V003,Reliable Pharma,Health,980000,Delhi,2025-01-03
+V003,Reliable Pharma,Health,5100000,Delhi,2025-01-04
+V003,Reliable Pharma,Health,5200000,Delhi,2025-01-05
+V004,Green Earth NGO,Welfare,28000,Jaipur,2025-01-01
+V004,Green Earth NGO,Welfare,30000,Jaipur,2025-01-02
+V004,Green Earth NGO,Welfare,32000,Jaipur,2025-01-03
+V004,Green Earth NGO,Welfare,34000,Jaipur,2025-01-04
+V004,Green Earth NGO,Welfare,36000,Jaipur,2025-01-05
+V005,Sunrise Tech,IT,210000,Bengaluru,2025-01-01
+V005,Sunrise Tech,IT,220000,Bengaluru,2025-01-02
+V005,Sunrise Tech,IT,230000,Bengaluru,2025-01-03
+V005,Sunrise Tech,IT,240000,Bengaluru,2025-01-04
+V005,Sunrise Tech,IT,250000,Bengaluru,2025-01-05
+V006,Rural Aid Trust,Welfare,25000,Patna,2025-01-01
+V006,Rural Aid Trust,Welfare,26000,Patna,2025-01-02
+V006,Rural Aid Trust,Welfare,27000,Patna,2025-01-03
+V006,Rural Aid Trust,Welfare,29000,Patna,2025-01-04
+V006,Rural Aid Trust,Welfare,30000,Patna,2025-01-05
+V007,MegaBuild Constructions,Infrastructure,8200000,Noida,2025-01-01
+V007,MegaBuild Constructions,Infrastructure,8300000,Noida,2025-01-02
+V007,MegaBuild Constructions,Infrastructure,8400000,Noida,2025-01-03
+V007,MegaBuild Constructions,Infrastructure,8500000,Noida,2025-01-04
+V007,MegaBuild Constructions,Infrastructure,8600000,Noida,2025-01-05
+V008,Urban Works Ltd,Infrastructure,1500000,Gurgaon,2025-01-01
+V008,Urban Works Ltd,Infrastructure,1550000,Gurgaon,2025-01-02
+V008,Urban Works Ltd,Infrastructure,1600000,Gurgaon,2025-01-03
+V008,Urban Works Ltd,Infrastructure,1650000,Gurgaon,2025-01-04
+V008,Urban Works Ltd,Infrastructure,1700000,Gurgaon,2025-01-05
+V009,QuickServe Services,IT,950000,Hyderabad,2025-01-01
+V009,QuickServe Services,IT,960000,Hyderabad,2025-01-02
+V009,QuickServe Services,IT,970000,Hyderabad,2025-01-03
+V009,QuickServe Services,IT,980000,Hyderabad,2025-01-04
+V009,QuickServe Services,IT,990000,Hyderabad,2025-01-05
+V010,CityClean Solutions,Welfare,40000,Delhi,2025-01-01
+V010,CityClean Solutions,Welfare,42000,Delhi,2025-01-02
+V010,CityClean Solutions,Welfare,44000,Delhi,2025-01-03
+V010,CityClean Solutions,Welfare,46000,Delhi,2025-01-04
+V010,CityClean Solutions,Welfare,48000,Delhi,2025-01-05
