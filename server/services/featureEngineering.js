@@ -1,8 +1,26 @@
-export function buildFeatures(transactions){
-    return transactions.map((t) => ({
-        transaction_id: t.id,
-        amount: Number(t.amount),
-        frequency: 1, // aise hi hai
-        avg_amount: Number(t.amount), // aise hi hai
-    }));
-} // aise hi hai just a concept
+function buildFeatures(transactions) {
+    const vendorStats = {};
+
+    transactions.forEach(t => {
+        if (!vendorStats[t.vendor_id]) {
+            vendorStats[t.vendor_id] = {
+                count: 0,
+                total: 0
+            };
+        }
+        vendorStats[t.vendor_id].count += 1;
+        vendorStats[t.vendor_id].total += Number(t.amount);
+    });
+
+    return transactions.map(t => {
+        const stats = vendorStats[t.vendor_id];
+        return {
+            transaction_id: t.id,
+            amount: Number(t.amount),
+            frequency: stats.count,
+            avg_amount: stats.total / stats.count
+        };
+    });
+}
+
+module.exports = { buildFeatures };

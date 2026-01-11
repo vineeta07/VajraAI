@@ -1,30 +1,59 @@
-const {Router} = require("express");
-const {pool} = require("../db/pool");
-const axios = require("axios");
+const { Router } = require("express");
+const { pool } = require("../db/pool");
+const { buildFeatures } = require("../services/featureEngineering");
+const { runMLDetection } = require("../services/mlService");
+const { generateReasons } = require("../services/ruleEngine");
 
 const router = Router();
 
-const {buildFeatures} = require("../services/featureEngineering");
-const {generateReasons} = require("../services/ruleEngine");
-
 router.post("/", async (req, res) => {
-    try {
-        const {rows} = await pool.query("SELECT * FROM transactions");
+  try {
+    const { rows: transactions } = await pool.query(
+      "SELECT * FROM transactions"
+    );
 
-        const featureData = buildFeatures(rows);
-        const mlResponse = await axios.post(process.env.ML_SERVICE_URL, featureData);
-
-        for (let result of mlResponse.data){
-            const reasons = generateReasons(result);
-
-            await pool.query(`INSERT INTO anomaly_results(transaction_id, anomaly_score, risk_level, reason) VALUES ($1, $2, $3, $4)`, [result.transaction_id, result.anomaly_score, result,risk_level, reasons]);
-        }
-        res.json({message: "Fraud analysis completed"});
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Analysis failed"});
+    if (transactions.length === 0) {
+      return res.status(400).json({ error: "No transactions found" });
     }
+
+    const features = buildFeatures(transactions);
+
+    const mlResults = await runMLDetection(features);
+
+    await pool.query("DELETE FROM anomaly_results");
+
+    for (const result of mlResults) {
+      const tx = transactions.find(t => t.id === result.transaction_id);
+
+      const reasons = generateReasons({
+        ...result,
+        amount: Number(tx.amount),
+        avg_amount: tx.amount,
+        frequency: 1
+      });
+
+      await pool.query(
+        `INSERT INTO anomaly_results
+         (transaction_id, anomaly_score, risk_level, reason)
+         VALUES ($1,$2,$3,$4)`,
+        [
+          result.transaction_id,
+          result.anomaly_score,
+          result.risk_level,
+          reasons
+        ]
+      );
+    }
+
+    res.json({
+      message: "Fraud analysis completed",
+      analyzed: mlResults.length
+    });
+
+  } catch (err) {
+    console.error("Analysis error:", err.message);
+    res.status(500).json({ error: "Fraud analysis failed" });
+  }
 });
 
 module.exports = router;

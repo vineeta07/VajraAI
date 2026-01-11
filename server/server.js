@@ -24,10 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/upload", authenticate, authorize("ADMIN"), uploadRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api/analyze", analyzeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/anomalies", authenticate, anomalyRoutes);
+app.use("/api/anomalies", anomalyRoutes);
 app.use("/api/heatmap", heatmapRoutes);
 
 app.get("/", (req, res) => {
