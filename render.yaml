@@ -23,7 +23,7 @@ services:
         fromService:
           type: web
           name: hack4delhi-ml-service
-          property: url
+          property: hostport
 
   # ML Service (Python/FastAPI)
   - type: web
