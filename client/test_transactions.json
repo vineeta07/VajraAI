@@ -1,0 +1,34 @@
+[
+    {
+        "vendor_id": "V001",
+        "vendor_name": "Office Depot",
+        "department": "Admin",
+        "amount": 150.00,
+        "location": "New York",
+        "transaction_date": "2023-10-20"
+    },
+    {
+        "vendor_id": "V002",
+        "vendor_name": "Unknown Corp",
+        "department": "IT",
+        "amount": 50000.00,
+        "location": "Unknown",
+        "transaction_date": "2023-10-21"
+    },
+    {
+        "vendor_id": "V003",
+        "vendor_name": "Amazon",
+        "department": "Engineering",
+        "amount": 299.99,
+        "location": "San Francisco",
+        "transaction_date": "2023-10-22"
+    },
+    {
+        "vendor_id": "V004",
+        "vendor_name": "Luxury Gifts",
+        "department": "HR",
+        "amount": 12000.00,
+        "location": "Paris",
+        "transaction_date": "2023-10-23"
+    }
+]
