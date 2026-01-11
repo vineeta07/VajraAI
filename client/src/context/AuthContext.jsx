@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 import { toast } from 'react-hot-toast';
 
 const AuthContext = createContext();
@@ -26,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const res = await axios.post('/api/auth/login', { email, password });
+            const res = await axios.post(`${API_URL}/auth/login`, { email, password });
             const { token, user } = res.data;
 
             localStorage.setItem('token', token);
@@ -45,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (name, email, password, role) => {
         try {
-            await axios.post('/api/auth/register', { name, email, password, role });
+            await axios.post(`${API_URL}/auth/register`, { name, email, password, role });
             toast.success('Registration successful. Please login.');
             return true;
         } catch (error) {
