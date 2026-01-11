@@ -74,7 +74,6 @@ const CITY_COORDINATES = {
     "Aligarh": [27.8974, 78.0880],
     "Jalandhar": [31.3260, 75.5762],
     "Tiruchirappalli": [10.7905, 78.7047],
-    "Bhubaneswar": [20.2961, 85.8245],
     "Salem": [11.6643, 78.1460],
     "Warangal": [17.9689, 79.5941],
     "Thiruvananthapuram": [8.5241, 76.9366],
@@ -84,24 +83,7 @@ const CITY_COORDINATES = {
     "Noida": [28.5355, 77.3910],
     "Dehradun": [30.3165, 78.0322],
     "Coimbatore": [11.0168, 76.9558],
-    "Surat": [21.1702, 72.8311],
-
-    // International
-    "New York": [40.7128, -74.0060],
-    "San Francisco": [37.7749, -122.4194],
-    "Los Angeles": [34.0522, -118.2437],
-    "London": [51.5074, -0.1278],
-    "Paris": [48.8566, 2.3522],
-    "Tokyo": [35.6762, 139.6503],
-    "Sydney": [-33.8688, 151.2093],
-    "Singapore": [1.3521, 103.8198],
-    "Berlin": [52.5200, 13.4050],
-    "Dubai": [25.2048, 55.2708],
-    "Toronto": [43.6510, -79.3470],
-    "Chicago": [41.8781, -87.6298],
-    "Houston": [29.7604, -95.3698],
-    "Seattle": [47.6062, -122.3321],
-    "Boston": [42.3601, -71.0589],
+    "Surat": [21.1702, 72.8311]
 };
 
 export default function RiskMap({ data }) {

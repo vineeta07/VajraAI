@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { ScanSearch, Play } from 'lucide-react';
+import { ScanSearch, Play, CheckCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Analyze() {
@@ -53,38 +53,57 @@ export default function Analyze() {
                         )}
                     </button>
                 ) : (
-                    <div className="space-y-4 animate-fade-in-up">
-                        <div className="rounded-md bg-green-50 p-4">
-                            <div className="flex">
-                                <div className="flex-shrink-0">
-                                    <Play className="h-5 w-5 text-green-400" aria-hidden="true" />
+                    <div className="mt-8 rounded-xl bg-white shadow-lg border border-gray-100 overflow-hidden transform transition-all duration-500 ease-out animate-fade-in-up">
+                        <div className="p-6 sm:p-8">
+                            <div className="flex items-center justify-center mb-6">
+                                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-green-100 sm:mx-0 sm:h-20 sm:w-20 ring-8 ring-green-50">
+                                    <CheckCircle className="h-8 w-8 text-green-600 sm:h-10 sm:w-10" />
                                 </div>
-                                <div className="ml-3">
-                                    <h3 className="text-sm font-medium text-green-800">Analysis Complete</h3>
-                                    <div className="mt-2 text-sm text-green-700">
-                                        <p>{result.message}</p>
-                                        <p>Processed {result.analyzed} transactions.</p>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                    Analysis Complete!
+                                </h3>
+                                <div className="mt-2 text-gray-500">
+                                    <p className="mb-4">
+                                        VajraAI has successfully processed your transaction data.
+                                    </p>
+                                    <div className="bg-gray-50 rounded-lg p-4 inline-block text-left w-full max-w-md mx-auto border border-gray-200">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-600">Transactions Analyzed:</span>
+                                            <span className="text-sm font-bold text-indigo-600 font-mono text-lg">{result.analyzed || result.total_processed}</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1">
+                                            <div className="bg-green-500 h-1.5 rounded-full w-full"></div>
+                                        </div>
+                                        <p className="text-xs text-gray-400 text-right">100% processed</p>
                                     </div>
+                                </div>
+                                <div className="mt-8 flex justify-center space-x-4">
+                                    <button
+                                        onClick={() => navigate('/')}
+                                        className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    >
+                                        Go to Dashboard
+                                    </button>
+                                    <button
+                                        onClick={() => navigate('/anomalies')}
+                                        className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    >
+                                        View Anomalies
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-center space-x-4">
-                            <button
-                                onClick={() => navigate('/')}
-                                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Go to Dashboard
-                            </button>
-                            <button
-                                onClick={() => navigate('/anomalies')}
-                                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                View Anomalies
-                            </button>
+                        <div className="bg-green-50 px-4 py-3 sm:px-6 flex justify-center">
+                            <p className="text-sm text-green-700 flex items-center font-medium">
+                                <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                                System ready for new tasks
+                            </p>
                         </div>
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
