@@ -24,7 +24,6 @@ services:
           type: web
           name: hack4delhi-ml-service
           property: url
-          envVarKey: ML_SERVICE_URL
 
   # ML Service (Python/FastAPI)
   - type: web
