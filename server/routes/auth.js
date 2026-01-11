@@ -7,11 +7,13 @@ const router = Router();
 
 router.post("/register", async (req, res) => {
     const { name, email, password, role } = req.body;
+    const normalizedRole = role ? role.toUpperCase() : "AUDITOR";
 
     try {
         const hash = await bcrypt.hash(password, 10);
 
-        await pool.query(`INSERT INTO users (name, email, password_hash, role) VALUES ($1,$2,$3,$4)`, [name, email, hash, role]);
+        // await pool.query(`INSERT INTO users (name, email, password_hash, role) VALUES ($1,$2,$3,$4)`, [name, email, hash, role]);
+        await pool.query(`INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)`, [name, email, hash, normalizedRole]);
 
         res.json({ message: "User registered successfully" });
     } catch (error) {

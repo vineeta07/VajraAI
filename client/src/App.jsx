@@ -1,0 +1,29 @@
+import { Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Upload from './pages/Upload';
+import Analyze from './pages/Analyze';
+import Anomalies from './pages/Anomalies';
+import Heatmap from './pages/Heatmap';
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/analyze" element={<Analyze />} />
+        <Route path="/anomalies" element={<Anomalies />} />
+        <Route path="/heatmap" element={<Heatmap />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default App;
