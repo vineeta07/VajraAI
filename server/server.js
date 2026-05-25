@@ -20,7 +20,9 @@ app.listen(PORT, () => {
 })
 
 app.use(cors({
-  origin: 'https://hack4-delhi-weld.vercel.app',
+  origin: function(origin, callback) {
+    return callback(null, true);
+  },
   credentials: true
 }));
 app.use(express.json());
