@@ -1,3 +1,8 @@
 # Large dataset files (see README for download link)
 ieee-fraud-detection/test_transaction.csv
 ieee-fraud-detection/train_transaction.csv
+.env
+
+# Python cache
+__pycache__/
+*.pyc

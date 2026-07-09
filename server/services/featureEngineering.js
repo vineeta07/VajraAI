@@ -20,7 +20,10 @@ function buildFeatures(transactions) {
             frequency: stats.count,
             avg_amount: stats.total / stats.count,
             estimated_cost: t.estimated_cost ? Number(t.estimated_cost) : null,
-            num_bidders: t.num_bidders ? Number(t.num_bidders) : null
+            num_bidders: t.num_bidders ? Number(t.num_bidders) : null,
+            department: t.department || null,
+            location: t.location || null,
+            vendor_id: t.vendor_id || null
         };
     });
 }

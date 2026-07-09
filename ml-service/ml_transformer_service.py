@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from dtypes import FrequencyEncoder
@@ -16,7 +16,12 @@ _main = sys.modules.get('__main__')
 if _main:
     _main.FrequencyEncoder = FrequencyEncoder
 
-# ── Model Architecture (mirrors train_ieee.py) ──────────────────────────────
+MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
+CORE_APP_FIELDS = ['amount', 'frequency', 'avg_amount', 'estimated_cost', 'num_bidders', 'department', 'location', 'vendor_id']
+CORE_IEEE_FIELDS = ['card1', 'addr1', 'card4', 'ProductCD', 'dist1', 'dist2']
+
+
+# ── Model Architecture ──────────────────────────────────────────────────────
 
 def embedding_dim(cardinality: int) -> int:
     if cardinality > 50000: return 64
@@ -25,6 +30,7 @@ def embedding_dim(cardinality: int) -> int:
     if cardinality > 100:   return 8
     return 4
 
+
 class DynamicEmbedding(nn.Module):
     def __init__(self, vocab_sizes: dict):
         super().__init__()
@@ -32,11 +38,14 @@ class DynamicEmbedding(nn.Module):
         for name, vs in vocab_sizes.items():
             self.embeddings[name] = nn.Embedding(vs, embedding_dim(vs), padding_idx=0)
         self._names = list(self.embeddings.keys())
+
     @property
     def total_dim(self):
         return sum(e.embedding_dim for e in self.embeddings.values())
+
     def forward(self, cat_dict: dict) -> torch.Tensor:
         return torch.cat([self.embeddings[k](cat_dict[k]) for k in self._names], dim=-1)
+
 
 class TabularTransformer(nn.Module):
     def __init__(self, cat_vocab_sizes: dict, num_numeric: int,
@@ -59,10 +68,12 @@ class TabularTransformer(nn.Module):
             nn.Linear(d_model // 2, 1),
         )
         self._init_weights()
+
     def _init_weights(self):
         for p in self.parameters():
             if p.dim() > 1:
                 nn.init.xavier_uniform_(p, gain=0.5)
+
     def forward(self, cat_values: dict, num_values: torch.Tensor):
         cat_emb = self.cat_embedding(cat_values)
         cat_proj = self.cat_proj(cat_emb)
@@ -78,9 +89,7 @@ class TabularTransformer(nn.Module):
 
 # ── FastAPI ──────────────────────────────────────────────────────────────────
 
-app = FastAPI(title="VajraAI Anomaly Detection Service")
-
-MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
+app = FastAPI(title="VajraAI Unified Anomaly Detection Service")
 
 
 class TransactionInput(BaseModel):
@@ -90,6 +99,9 @@ class TransactionInput(BaseModel):
     avg_amount: float
     estimated_cost: Optional[float] = None
     num_bidders: Optional[int] = None
+    department: Optional[str] = None
+    location: Optional[str] = None
+    vendor_id: Optional[str] = None
     card1: Optional[int] = None
     addr1: Optional[int] = None
     card4: Optional[str] = None
@@ -120,7 +132,17 @@ class TransactionInput(BaseModel):
     id_15: Optional[float] = None
     id_16: Optional[float] = None
     id_17: Optional[float] = None
+    id_23: Optional[float] = None
+    id_27: Optional[float] = None
+    id_28: Optional[float] = None
+    id_29: Optional[float] = None
+    id_30: Optional[float] = None
     id_31: Optional[float] = None
+    id_33: Optional[float] = None
+    id_34: Optional[float] = None
+    id_35: Optional[float] = None
+    id_36: Optional[float] = None
+    id_37: Optional[float] = None
     id_38: Optional[float] = None
 
 
@@ -143,7 +165,7 @@ def load_model():
     scaler_path = os.path.join(MODEL_DIR, 'scaler.pkl')
 
     if not os.path.exists(model_path):
-        print(f"WARNING: No trained model at {model_path}. Running in legacy mode.")
+        print(f"No trained model at {model_path}. Service will return LOW_CONFIDENCE for all requests.")
         return False
 
     with open(artifact_path, 'rb') as f:
@@ -159,7 +181,8 @@ def load_model():
     ).to(_device)
 
     ckpt = torch.load(model_path, map_location=_device, weights_only=False)
-    _model.load_state_dict(ckpt['model_state_dict'])
+    sd = ckpt['model_state_dict'] if 'model_state_dict' in ckpt else ckpt
+    _model.load_state_dict(sd)
     _model.eval()
     print(f"Model loaded from {model_path} using {_device}")
     return True
@@ -176,18 +199,47 @@ def health():
         "status": "ok",
         "model_loaded": _model is not None,
         "device": str(_device),
-        "mode": "ieee_transformer" if _model is not None else "legacy_fallback",
     }
 
 
+# ── Guardrails ──────────────────────────────────────────────────────────────
+
+def _missing_ratio(data: TransactionInput) -> float:
+    has_ieee = data.card1 is not None
+    has_app = data.department is not None or data.vendor_id is not None
+    if has_ieee and not has_app:
+        core = CORE_IEEE_FIELDS
+    elif has_app and not has_ieee:
+        core = CORE_APP_FIELDS
+    else:
+        core = CORE_APP_FIELDS + CORE_IEEE_FIELDS
+    present = 0
+    for field in core:
+        val = getattr(data, field, None)
+        if val is not None and val != 'MISSING':
+            present += 1
+    return 1.0 - (present / len(core)) if core else 1.0
+
+
+def _schema_assertion(num_vector_size: int, cat_count: int):
+    assert num_vector_size >= 100, f"Numeric feature vector too small: {num_vector_size} < 100"
+    assert cat_count >= 25, f"Categorical feature count too small: {cat_count} < 25"
+
+
+# ── Unified Detection ───────────────────────────────────────────────────────
+
 @app.post("/detect", response_model=List[PredictResponse])
 def detect_anomalies(data: List[TransactionInput]):
-    if _model is None or _artifact is None:
-        return _legacy_detect(data)
+    return _unified_detect(data)
 
-    has_ieee_fields = any(d.card1 is not None for d in data)
-    if not has_ieee_fields:
-        return _legacy_detect(data)
+
+def _unified_detect(data: List[TransactionInput]) -> List[PredictResponse]:
+    if _model is None or _artifact is None:
+        return [PredictResponse(
+            transaction_id=d.transaction_id,
+            anomaly_score=0.0,
+            risk_level="LOW_CONFIDENCE",
+        ) for d in data]
 
     usable_nums = _artifact['usable_nums']
     usable_cats = _artifact['usable_cats']
@@ -197,39 +249,66 @@ def detect_anomalies(data: List[TransactionInput]):
         add_time_features, add_time_delta_features, add_velocity_features_fast,
     )
 
+    def get_val(d, attr, default):
+        v = getattr(d, attr, None)
+        return v if v is not None else default
+
+    missing_ratios = []
     rows = []
     for d in data:
+        mr = _missing_ratio(d)
+        missing_ratios.append(mr)
+
         row = {
             'TransactionID': d.transaction_id,
             'TransactionDT': 0,
             'isFraud': 0,
-            'TransactionAmt': d.amount,
-            'card1': d.card1 or 0,
-            'card2': d.card2 or 0,
-            'card3': d.card3 or 0.0,
-            'card4': d.card4 or 'NAN',
-            'card5': d.card5 or 0,
-            'card6': d.card6 or 'NAN',
-            'addr1': d.addr1 or 0,
-            'addr2': d.addr2 or 0,
-            'dist1': d.dist1 or 0.0,
-            'dist2': d.dist2 or 0.0,
-            'P_emaildomain': d.P_emaildomain or 'NAN',
-            'R_emaildomain': d.R_emaildomain or 'NAN',
-            'ProductCD': d.ProductCD or 'NAN',
-            'M1': d.M1 or 'NAN', 'M2': d.M2 or 'NAN', 'M3': d.M3 or 'NAN',
-            'M4': d.M4 or 'NAN', 'M5': d.M5 or 'NAN', 'M6': d.M6 or 'NAN',
-            'M7': d.M7 or 'NAN', 'M8': d.M8 or 'NAN', 'M9': d.M9 or 'NAN',
-            'DeviceType': d.DeviceType or 'UNK',
-            'DeviceInfo': d.DeviceInfo or 'UNK',
-            'id_12': d.id_12 if d.id_12 is not None else -1.0,
-            'id_13': d.id_13 if d.id_13 is not None else -1.0,
-            'id_14': d.id_14 if d.id_14 is not None else -1.0,
-            'id_15': d.id_15 if d.id_15 is not None else -1.0,
-            'id_16': d.id_16 if d.id_16 is not None else -1.0,
-            'id_17': d.id_17 if d.id_17 is not None else -1.0,
-            'id_31': d.id_31 if d.id_31 is not None else -1.0,
-            'id_38': d.id_38 if d.id_38 is not None else -1.0,
+            'TransactionAmt': get_val(d, 'amount', -1.0),
+            'card1': get_val(d, 'card1', 0),
+            'card2': get_val(d, 'card2', 0),
+            'card3': get_val(d, 'card3', 0.0),
+            'card4': get_val(d, 'card4', 'MISSING'),
+            'card5': get_val(d, 'card5', 0),
+            'card6': get_val(d, 'card6', 'MISSING'),
+            'addr1': get_val(d, 'addr1', 0),
+            'addr2': get_val(d, 'addr2', 0),
+            'dist1': get_val(d, 'dist1', 0.0),
+            'dist2': get_val(d, 'dist2', 0.0),
+            'P_emaildomain': get_val(d, 'P_emaildomain', 'MISSING'),
+            'R_emaildomain': get_val(d, 'R_emaildomain', 'MISSING'),
+            'ProductCD': get_val(d, 'ProductCD', 'MISSING'),
+            'M1': get_val(d, 'M1', 'MISSING'),
+            'M2': get_val(d, 'M2', 'MISSING'),
+            'M3': get_val(d, 'M3', 'MISSING'),
+            'M4': get_val(d, 'M4', 'MISSING'),
+            'M5': get_val(d, 'M5', 'MISSING'),
+            'M6': get_val(d, 'M6', 'MISSING'),
+            'M7': get_val(d, 'M7', 'MISSING'),
+            'M8': get_val(d, 'M8', 'MISSING'),
+            'M9': get_val(d, 'M9', 'MISSING'),
+            'DeviceType': get_val(d, 'DeviceType', 'MISSING'),
+            'DeviceInfo': get_val(d, 'DeviceInfo', 'MISSING'),
+            'department': get_val(d, 'department', 'MISSING'),
+            'location': get_val(d, 'location', 'MISSING'),
+            'vendor_id': get_val(d, 'vendor_id', 'MISSING'),
+            'id_12': get_val(d, 'id_12', -1.0),
+            'id_13': get_val(d, 'id_13', -1.0),
+            'id_14': get_val(d, 'id_14', -1.0),
+            'id_15': get_val(d, 'id_15', -1.0),
+            'id_16': get_val(d, 'id_16', -1.0),
+            'id_17': get_val(d, 'id_17', -1.0),
+            'id_23': get_val(d, 'id_23', -1.0),
+            'id_27': get_val(d, 'id_27', -1.0),
+            'id_28': get_val(d, 'id_28', -1.0),
+            'id_29': get_val(d, 'id_29', -1.0),
+            'id_30': get_val(d, 'id_30', -1.0),
+            'id_31': get_val(d, 'id_31', -1.0),
+            'id_33': get_val(d, 'id_33', -1.0),
+            'id_34': get_val(d, 'id_34', -1.0),
+            'id_35': get_val(d, 'id_35', -1.0),
+            'id_36': get_val(d, 'id_36', -1.0),
+            'id_37': get_val(d, 'id_37', -1.0),
+            'id_38': get_val(d, 'id_38', -1.0),
         }
         rows.append(row)
 
@@ -245,18 +324,20 @@ def detect_anomalies(data: List[TransactionInput]):
         df[miss_col] = (df[col] < -0.5).astype(np.float32)
 
     for c in usable_cats:
-        if c in df.columns:
-            df[c] = df[c].fillna('NAN')
-
-    df = freq_encoder.transform(df, usable_cats)
+        if c not in df.columns:
+            df[c] = 'MISSING'
 
     for c in usable_nums:
         if c not in df.columns:
-            df[c] = 0.0
+            df[c] = -1.0
+
+    df = freq_encoder.transform(df, usable_cats)
 
     cat_np = np.column_stack([df[c].values.astype(np.int64) for c in usable_cats])
-    num_np = df[usable_nums].fillna(0.0).values.astype(np.float32)
+    num_np = df[usable_nums].fillna(-1.0).values.astype(np.float32)
     num_np = _scaler.transform(num_np)
+
+    _schema_assertion(num_np.shape[1], len(usable_cats))
 
     cat_tensors = {}
     for i, c in enumerate(usable_cats):
@@ -273,75 +354,17 @@ def detect_anomalies(data: List[TransactionInput]):
 
     results = []
     for i, score in enumerate(scores):
-        risk = "HIGH" if score > high_th else ("MEDIUM" if score > med_th else "LOW")
+        if missing_ratios[i] > 0.5:
+            risk = "LOW_CONFIDENCE"
+        elif score > high_th:
+            risk = "HIGH"
+        elif score > med_th:
+            risk = "MEDIUM"
+        else:
+            risk = "LOW"
         results.append(PredictResponse(
             transaction_id=data[i].transaction_id,
             anomaly_score=float(score),
             risk_level=risk,
         ))
     return results
-
-
-# ── Legacy fallback ──────────────────────────────────────────────────────────
-
-def _legacy_detect(data: List[TransactionInput]) -> List[PredictResponse]:
-    ids = [d.transaction_id for d in data]
-    features = []
-    for d in data:
-        est_cost = d.estimated_cost if d.estimated_cost is not None else d.amount
-        bidders = d.num_bidders if d.num_bidders is not None else 3.0
-        features.append([d.amount, d.frequency, d.avg_amount,
-                         (d.amount - est_cost) / (est_cost + 1e-9),
-                         1.0 / (float(bidders) + 1e-9)])
-    X = np.array(features, dtype=np.float32)
-    from sklearn.preprocessing import StandardScaler
-    leg_scaler = StandardScaler()
-    X_scaled = leg_scaler.fit_transform(X)
-    legacy_model = _build_legacy_model()
-    X_tensor = torch.tensor(X_scaled, dtype=torch.float32).unsqueeze(1)
-    with torch.no_grad():
-        recon = legacy_model(X_tensor)
-    errors = torch.mean((X_tensor - recon) ** 2, dim=(1, 2)).numpy()
-    high_th = np.percentile(errors, 95)
-    med_th = np.percentile(errors, 85)
-    results = []
-    for i, score in enumerate(errors):
-        risk = "LOW"
-        if score > high_th: risk = "HIGH"
-        elif score > med_th: risk = "MEDIUM"
-        d = data[i]
-        if d.num_bidders is not None and d.num_bidders == 1 and d.amount > 10000:
-            if risk == "LOW": risk = "MEDIUM"
-        results.append(PredictResponse(
-            transaction_id=ids[i], anomaly_score=float(score), risk_level=risk,
-        ))
-    return results
-
-
-def _build_legacy_model():
-    class PositionalEncoding(nn.Module):
-        def __init__(self, d_model, max_len=500):
-            super().__init__()
-            pe = torch.zeros(max_len, d_model)
-            position = torch.arange(0, max_len).unsqueeze(1).float()
-            div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
-            pe[:, 0::2] = torch.sin(position * div_term)
-            pe[:, 1::2] = torch.cos(position * div_term)
-            self.register_buffer("pe", pe.unsqueeze(0))
-        def forward(self, x):
-            return x + self.pe[:, :x.size(1)]
-    class LegacyTransformerAutoencoder(nn.Module):
-        def __init__(self, num_features, d_model=64, num_heads=4, num_layers=3, d_ff=256, dropout=0.1):
-            super().__init__()
-            self.embedding = nn.Linear(num_features, d_model)
-            self.positional_encoding = PositionalEncoding(d_model)
-            enc = nn.TransformerEncoderLayer(d_model, num_heads, d_ff, dropout, batch_first=True)
-            self.encoder = nn.TransformerEncoder(enc, num_layers)
-            self.decoder = nn.Linear(d_model, num_features)
-        def forward(self, x):
-            x = self.embedding(x)
-            x = self.positional_encoding(x)
-            return self.decoder(self.encoder(x))
-    m = LegacyTransformerAutoencoder(num_features=5)
-    m.eval()
-    return m

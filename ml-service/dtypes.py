@@ -11,6 +11,9 @@ CAT_COLS = [
     'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
 ]
 
+APP_CAT_COLS = ['department', 'location', 'vendor_id']
+ALL_CAT_COLS = CAT_COLS + APP_CAT_COLS
+
 NUM_COLS = [
     'TransactionAmt', 'dist1', 'dist2',
     'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10',
@@ -19,11 +22,12 @@ NUM_COLS = [
     'D11', 'D12', 'D13', 'D14', 'D15',
 ]
 
+APP_NUM_COLS = []
+
 V_COLS = [f'V{i}' for i in range(1, 340)]
 
 ID_COLS_EXTRA = [f'id_{i:02d}' for i in range(1, 39)]
 
-# Identity columns known to carry high fraud signal
 HIGH_SIGNAL_ID_COLS = [
     'id_01', 'id_02', 'id_03', 'id_05', 'id_06', 'id_11',
     'id_12', 'id_13', 'id_14', 'id_15', 'id_16', 'id_17',
@@ -198,9 +202,7 @@ def add_velocity_features_fast(
     return df
 
 
-# ── 3. IDENTITY MERGE WITH MISSINGNESS INDICATORS ───────────────────────────
-
-# ── 4. FREQUENCY ENCODER (shared between training and inference) ─────────────
+# ── 3. FREQUENCY ENCODER ────────────────────────────────────────────────────
 
 class FrequencyEncoder:
     def __init__(self, min_count: int = 5):
@@ -214,8 +216,8 @@ class FrequencyEncoder:
             freq = df[col].value_counts()
             freq = freq[freq >= self.min_count]
             idx = {k: i + 2 for i, k in enumerate(freq.index.to_list())}
+            idx['MISSING'] = 0
             idx[np.nan] = 1
-            idx['UNK'] = 0
             self.mappings[col] = idx
         return self
 

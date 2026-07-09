@@ -21,6 +21,7 @@ from dtypes import (
     add_velocity_features_fast, merge_identity,
     HIGH_SIGNAL_ID_COLS, ID_COLS_EXTRA,
     IDENTITY_NUM_COLS, IDENTITY_CAT_COLS,
+    APP_CAT_COLS, ALL_CAT_COLS, APP_NUM_COLS,
     FrequencyEncoder,
 )
 
@@ -33,9 +34,46 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ieee-
 MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
 os.makedirs(MODEL_DIR, exist_ok=True)
 
+# Synthetic app-native field pools
+SYNTHETIC_DEPARTMENTS = ['Engineering', 'Finance', 'Marketing', 'Operations', 'Sales', 'HR', 'IT', 'Legal', 'R&D', 'Support']
+SYNTHETIC_LOCATIONS = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose']
+SYNTHETIC_VENDOR_IDS = [f'VENDOR_{i:03d}' for i in range(1, 101)]
+
+
+def add_synthetic_app_fields(df: pd.DataFrame, missing_prob: float = 0.05) -> pd.DataFrame:
+    n = len(df)
+    np.random.seed(42)
+    depts = np.random.choice(SYNTHETIC_DEPARTMENTS, size=n)
+    locs = np.random.choice(SYNTHETIC_LOCATIONS, size=n)
+    vids = np.random.choice(SYNTHETIC_VENDOR_IDS, size=n)
+    if missing_prob > 0:
+        dept_mask = np.random.random(n) < missing_prob
+        loc_mask = np.random.random(n) < missing_prob
+        vid_mask = np.random.random(n) < missing_prob
+        depts[dept_mask] = 'MISSING'
+        locs[loc_mask] = 'MISSING'
+        vids[vid_mask] = 'MISSING'
+    df['department'] = depts
+    df['location'] = locs
+    df['vendor_id'] = vids
+    return df
+
 
 # ---------------------------------------------------------------------------
-# 1. FEATURE ENGINEERING PIPELINE
+# 1. MISSING AUGMENTATION
+# ---------------------------------------------------------------------------
+
+def add_missing_augmentation(cat_tensor: torch.Tensor, p: float = 0.1) -> torch.Tensor:
+    if p <= 0.0:
+        return cat_tensor
+    mask = torch.rand(cat_tensor.shape, device=cat_tensor.device) < p
+    cat_tensor = cat_tensor.clone()
+    cat_tensor[mask] = 0
+    return cat_tensor
+
+
+# ---------------------------------------------------------------------------
+# 2. FEATURE ENGINEERING PIPELINE
 # ---------------------------------------------------------------------------
 
 def build_feature_pipeline(df: pd.DataFrame, freq_encoder: FrequencyEncoder = None) -> Tuple[pd.DataFrame, FrequencyEncoder]:
@@ -56,6 +94,11 @@ def build_feature_pipeline(df: pd.DataFrame, freq_encoder: FrequencyEncoder = No
             usable_cats.append(c)
             df[c] = df[c].fillna('UNK')
 
+    for c in APP_CAT_COLS:
+        if c in df.columns:
+            usable_cats.append(c)
+            df[c] = df[c].fillna('MISSING')
+
     for c in usable_cats:
         if c in df.columns:
             if isinstance(df[c].dtype, pd.CategoricalDtype):
@@ -72,14 +115,16 @@ def build_feature_pipeline(df: pd.DataFrame, freq_encoder: FrequencyEncoder = No
 
 
 # ---------------------------------------------------------------------------
-# 2. DATASET (with optional per-sample weights for hard negative mining)
+# 3. DATASET
 # ---------------------------------------------------------------------------
 
 class IEEE802Dataset(Dataset):
     def __init__(self, df: pd.DataFrame, cat_cols: List[str], num_cols: List[str],
                  cat_vocab_sizes: Dict[str, int], target_col: str = TARGET,
-                 is_test: bool = False, sample_weights: Optional[np.ndarray] = None):
+                 is_test: bool = False, sample_weights: Optional[np.ndarray] = None,
+                 missing_aug_p: float = 0.0):
         self.is_test = is_test
+        self.missing_aug_p = missing_aug_p if not is_test else 0.0
         self.cat_cols = [c for c in cat_cols if c in df.columns]
         self.num_cols = [c for c in num_cols if c in df.columns]
 
@@ -116,7 +161,7 @@ class IEEE802Dataset(Dataset):
 
 
 # ---------------------------------------------------------------------------
-# 3. DYNAMIC EMBEDDING + TABULAR TRANSFORMER
+# 4. DYNAMIC EMBEDDING + TABULAR TRANSFORMER
 # ---------------------------------------------------------------------------
 
 def embedding_dim(cardinality: int) -> int:
@@ -167,8 +212,6 @@ class TabularTransformer(nn.Module):
 
         self.norm = nn.LayerNorm(d_model)
 
-        # ── RESIDUAL CLASSIFICATION HEAD ─────────────────────────────────
-        # Concatenates: [transformer CLS output | raw categorical embeddings | raw numeric inputs]
         self.residual_concat = nn.Linear(d_model + cat_dim + num_numeric, d_model)
         self.classifier = nn.Sequential(
             nn.LayerNorm(d_model),
@@ -201,7 +244,6 @@ class TabularTransformer(nn.Module):
 
         cls_out = x[:, 0, :]
 
-        # Explicit residual concat: [cls_token | raw_cat_emb | raw_numeric]
         combined = torch.cat([cls_out, cat_emb, num_values], dim=1)
         combined = self.residual_concat(combined)
         logit = self.classifier(combined).squeeze(-1)
@@ -209,7 +251,7 @@ class TabularTransformer(nn.Module):
 
 
 # ---------------------------------------------------------------------------
-# 4. FOCAL LOSS (with optional per-sample weights)
+# 5. FOCAL LOSS
 # ---------------------------------------------------------------------------
 
 class FocalLoss(nn.Module):
@@ -239,7 +281,7 @@ class FocalLoss(nn.Module):
 
 
 # ---------------------------------------------------------------------------
-# 5. EXPANDING WINDOW CROSS-VALIDATION
+# 6. EXPANDING WINDOW CROSS-VALIDATION
 # ---------------------------------------------------------------------------
 
 def expand_window_cv(df: pd.DataFrame, n_splits: int = 5):
@@ -258,7 +300,7 @@ def expand_window_cv(df: pd.DataFrame, n_splits: int = 5):
 
 
 # ---------------------------------------------------------------------------
-# 6. DATA LOADING (Memory-Efficient + Identity Merge)
+# 7. DATA LOADING
 # ---------------------------------------------------------------------------
 
 def load_data(subset: Optional[int] = None) -> pd.DataFrame:
@@ -287,7 +329,7 @@ def load_data(subset: Optional[int] = None) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# 7. HARD NEGATIVE MINING
+# 8. HARD NEGATIVE MINING
 # ---------------------------------------------------------------------------
 
 def identify_hard_negatives(model, loader, device, top_k_pct=0.05):
@@ -340,10 +382,10 @@ def build_hard_negative_weights(n_samples: int, hard_neg_indices: List[int],
 
 
 # ---------------------------------------------------------------------------
-# 8. TRAINING LOOP (with Hard Negative Mining)
+# 9. TRAINING LOOP
 # ---------------------------------------------------------------------------
 
-def train_epoch(model, loader, optimizer, criterion, device):
+def train_epoch(model, loader, optimizer, criterion, device, missing_aug_p=0.0):
     model.train()
     total_loss = 0
     for batch in tqdm(loader, desc="Train"):
@@ -352,6 +394,9 @@ def train_epoch(model, loader, optimizer, criterion, device):
         else:
             cat_vals, num_vals, targets = batch
             weights = None
+
+        if missing_aug_p > 0:
+            cat_vals = add_missing_augmentation(cat_vals, p=missing_aug_p)
 
         cat_dict = {k: v.to(device) for k, v in zip(model.cat_embedding.embeddings.keys(), cat_vals.T)}
         num_vals = num_vals.to(device)
@@ -392,7 +437,8 @@ def run_expanding_window_cv(df: pd.DataFrame, cat_cols: List[str], num_cols: Lis
                             cat_vocab_sizes: Dict[str, int], n_splits: int = 4,
                             batch_size: int = 2048, epochs: int = 10,
                             lr: float = 1e-3, hard_neg_mining: bool = True,
-                            hard_neg_top_k: float = 0.05, hard_neg_weight: float = 5.0):
+                            hard_neg_top_k: float = 0.05, hard_neg_weight: float = 5.0,
+                            missing_aug_p: float = 0.1):
     splits = expand_window_cv(df, n_splits)
     results = []
 
@@ -412,7 +458,9 @@ def run_expanding_window_cv(df: pd.DataFrame, cat_cols: List[str], num_cols: Lis
             train_df[c] = train_nums[:, i]
             val_df[c] = val_nums[:, i]
 
-        train_dataset_no_weight = IEEE802Dataset(train_df, cat_cols, num_cols, cat_vocab_sizes)
+        train_dataset_no_weight = IEEE802Dataset(
+            train_df, cat_cols, num_cols, cat_vocab_sizes, missing_aug_p=missing_aug_p,
+        )
         val_dataset = IEEE802Dataset(val_df, cat_cols, num_cols, cat_vocab_sizes)
 
         val_loader = DataLoader(val_dataset, batch_size=batch_size * 2, shuffle=False, num_workers=0)
@@ -443,7 +491,7 @@ def run_expanding_window_cv(df: pd.DataFrame, cat_cols: List[str], num_cols: Lis
                 )
                 train_dataset = IEEE802Dataset(
                     train_df, cat_cols, num_cols, cat_vocab_sizes,
-                    sample_weights=weights,
+                    sample_weights=weights, missing_aug_p=missing_aug_p,
                 )
                 sampler = WeightedRandomSampler(
                     weights=weights,
@@ -460,7 +508,8 @@ def run_expanding_window_cv(df: pd.DataFrame, cat_cols: List[str], num_cols: Lis
                     shuffle=True, num_workers=0,
                 )
 
-            train_loss = train_epoch(model, train_loader, optimizer, criterion, DEVICE)
+            train_loss = train_epoch(model, train_loader, optimizer, criterion, DEVICE,
+                                     missing_aug_p=missing_aug_p)
             roc_auc, pr_auc, y_pred, y_true = eval_model(model, val_loader, DEVICE)
             scheduler.step()
 
@@ -496,12 +545,15 @@ def run_expanding_window_cv(df: pd.DataFrame, cat_cols: List[str], num_cols: Lis
 
 
 # ---------------------------------------------------------------------------
-# 9. FULL PIPELINE
+# 10. FULL PIPELINE
 # ---------------------------------------------------------------------------
 
 def main(subset: Optional[int] = None):
     df = load_data(subset=subset)
     df = df.sort_values('TransactionDT').reset_index(drop=True)
+
+    print("Adding synthetic app-native fields...")
+    df = add_synthetic_app_fields(df, missing_prob=0.05)
 
     print("Building feature pipeline...")
     df, freq_encoder = build_feature_pipeline(df, freq_encoder=None)
@@ -510,6 +562,9 @@ def main(subset: Optional[int] = None):
 
     identity_cat_cols = [c for c in IDENTITY_CAT_COLS if c in df.columns]
     usable_cats += identity_cat_cols
+
+    app_cats = [c for c in APP_CAT_COLS if c in df.columns]
+    usable_cats += app_cats
 
     usable_nums = [c for c in NUM_COLS + V_COLS if c in df.columns]
     velocity_cols = [c for c in df.columns if 'tx_count_' in c or 'amt_sum_' in c]
@@ -526,7 +581,7 @@ def main(subset: Optional[int] = None):
         vocab_size = int(df[c].max()) + 2
         cat_vocab_sizes[c] = vocab_size
 
-    print(f"\nUsing {len(usable_cats)} categorical features")
+    print(f"\nUsing {len(usable_cats)} categorical features ({len(app_cats)} app-native)")
     print(f"Using {len(usable_nums)} numerical features (incl. {len(velocity_cols)} velocity, {len(missing_cols)} missingness)")
     print(f"Total samples: {len(df)}, Fraud rate: {df[TARGET].mean():.4f}")
 
@@ -542,6 +597,7 @@ def main(subset: Optional[int] = None):
         hard_neg_mining=True,
         hard_neg_top_k=0.05,
         hard_neg_weight=5.0,
+        missing_aug_p=0.1,
     )
 
     print(f"\nBest ROC-AUC across folds: {max(r['roc_auc'] for r in results):.4f}")
@@ -585,6 +641,7 @@ def main(subset: Optional[int] = None):
     print("  - Full 590K dataset with 30+ epochs + early stopping")
     print("  - Identity table (already merged)")
     print("  - Hard negative mining active")
+    print("  - Missing augmentation active")
     print("  - Monitor PR-AUC (not just ROC-AUC)")
 
 
