@@ -2,6 +2,16 @@
 
 VajraAI is an advanced detection platform designed to identify fraud, irregularities, and anomalies in government spending, procurement, welfare delivery, and public contracts. The system combines domain-aware feature engineering, unsupervised models (e.g., Transformer autoencoders), graph/network analysis for collusion and bid-rigging detection, and a rules engine with human-in-the-loop workflows for prioritization and investigation. Emphasis is placed on explainability, data enrichment, operational monitoring, and secure handling of sensitive data. The implementation uses a modern stack with a React frontend, Node.js/Express backend, and a Python-based ML service.
 
+## 📊 Dataset
+
+This project uses the [IEEE Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection/data) dataset from Kaggle for transaction analysis and anomaly detection.
+
+The dataset files `train_transaction.csv` (~652 MB) and `test_transaction.csv` (~585 MB) exceed GitHub's 100 MB file size limit and are not tracked in this repository. To run the project with real data:
+
+1. Download the dataset from [Kaggle IEEE Fraud Detection](https://www.kaggle.com/c/ieee-fraud-detection/data)
+2. Place the CSV files in the `ieee-fraud-detection/` directory
+3. The application will load them automatically
+
 ## 🚀 Features
 
 *   **Dashboard**: Real-time overview of risk distribution, recent anomalies, and top high-risk vendors.
