@@ -600,7 +600,9 @@ def main(subset: Optional[int] = None):
         missing_aug_p=0.1,
     )
 
-    print(f"\nBest ROC-AUC across folds: {max(r['roc_auc'] for r in results):.4f}")
+    best_result = max(results, key=lambda r: r['roc_auc'])
+    print(f"\nBest ROC-AUC across folds: {best_result['roc_auc']:.4f}")
+    print(f"Saving model from fold {best_result['fold'] + 1} (ROC-AUC: {best_result['roc_auc']:.4f})")
 
     full_model = TabularTransformer(
         cat_vocab_sizes=cat_vocab_sizes,
@@ -611,9 +613,8 @@ def main(subset: Optional[int] = None):
         d_ff=512,
         dropout=0.15,
     ).to(DEVICE)
-
     full_model.load_state_dict(torch.load(
-        os.path.join(MODEL_DIR, f'model_fold{results[0]["fold"]}.pt'),
+        os.path.join(MODEL_DIR, f'model_fold{best_result["fold"]}.pt'),
         map_location=DEVICE,
     ))
 

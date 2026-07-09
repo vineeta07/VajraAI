@@ -1,14 +1,14 @@
 {
   "project": "VajraAI - IEEE-CIS Fraud Detection",
   "model": "TabularTransformer",
-  "training_date": "2026-07-09T18:50:03.845515",
+  "training_date": "2026-07-10T01:07:00.940888",
   "dataset": {
     "source": "IEEE-CIS Fraud Detection",
     "total_rows": 590540,
-    "subset_used": 20000,
+    "subset_used": 590540,
     "fraud_rate": 0.0281,
     "feature_pipeline": {
-      "categorical_features": 37,
+      "categorical_features": 40,
       "numerical_features": 449,
       "velocity_features": 18,
       "missingness_indicators": 35,
@@ -39,376 +39,39 @@
     "splits": [
       {
         "fold": 1,
-        "train": "0:5000",
-        "val": "5000:10000"
+        "train": "0:147635",
+        "val": "147635:295270"
       },
       {
         "fold": 2,
-        "train": "0:10000",
-        "val": "10000:15000"
+        "train": "0:295270",
+        "val": "295270:442905"
       },
       {
         "fold": 3,
-        "train": "0:15000",
-        "val": "15000:19999"
+        "train": "0:442905",
+        "val": "442905:590539"
       }
     ]
   },
   "validation_results": {
     "fold_1": {
-      "roc_auc": 0.7035,
-      "pr_auc": 0.0887
+      "roc_auc": 0.8388,
+      "pr_auc": 0.4083
     },
     "fold_2": {
-      "roc_auc": 0.7611,
-      "pr_auc": 0.1392
+      "roc_auc": 0.8594,
+      "pr_auc": 0.4223
     },
     "fold_3": {
-      "roc_auc": 0.8071,
-      "pr_auc": 0.2159
+      "roc_auc": 0.8587,
+      "pr_auc": 0.4087
     },
-    "mean_roc_auc": 0.7573,
-    "mean_pr_auc": 0.1479,
-    "best_roc_auc": 0.8071,
-    "best_pr_auc": 0.2159,
-    "best_fold": 3
+    "mean_roc_auc": 0.8523,
+    "mean_pr_auc": 0.4131,
+    "best_roc_auc": 0.8594,
+    "best_pr_auc": 0.4223,
+    "best_fold": 2
   },
-  "epoch_details": {
-    "fold_1": [
-      {
-        "epoch": 1,
-        "loss": 0.0732,
-        "roc_auc": 0.7035,
-        "pr_auc": 0.0887,
-        "hard_neg_threshold": 0.3737,
-        "hard_neg_max_prob": 0.5207,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 2,
-        "loss": 0.0612,
-        "roc_auc": 0.6756,
-        "pr_auc": 0.0983,
-        "hard_neg_threshold": 0.2047,
-        "hard_neg_max_prob": 0.3723,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 3,
-        "loss": 0.0182,
-        "roc_auc": 0.6592,
-        "pr_auc": 0.1016,
-        "hard_neg_threshold": 0.1314,
-        "hard_neg_max_prob": 0.2454,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 4,
-        "loss": 0.0104,
-        "roc_auc": 0.6462,
-        "pr_auc": 0.1005,
-        "hard_neg_threshold": 0.0976,
-        "hard_neg_max_prob": 0.1762,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 5,
-        "loss": 0.0121,
-        "roc_auc": 0.6298,
-        "pr_auc": 0.0978,
-        "hard_neg_threshold": 0.0814,
-        "hard_neg_max_prob": 0.1405,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 6,
-        "loss": 0.0124,
-        "roc_auc": 0.6216,
-        "pr_auc": 0.1086,
-        "hard_neg_threshold": 0.0744,
-        "hard_neg_max_prob": 0.1229,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 7,
-        "loss": 0.0116,
-        "roc_auc": 0.6054,
-        "pr_auc": 0.1098,
-        "hard_neg_threshold": 0.0735,
-        "hard_neg_max_prob": 0.115,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 8,
-        "loss": 0.009,
-        "roc_auc": 0.5936,
-        "pr_auc": 0.1062,
-        "hard_neg_threshold": 0.0755,
-        "hard_neg_max_prob": 0.1117,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 9,
-        "loss": 0.01,
-        "roc_auc": 0.5822,
-        "pr_auc": 0.1023,
-        "hard_neg_threshold": 0.0782,
-        "hard_neg_max_prob": 0.1107,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 10,
-        "loss": 0.0106,
-        "roc_auc": 0.5758,
-        "pr_auc": 0.1004,
-        "hard_neg_threshold": 0.0801,
-        "hard_neg_max_prob": 0.1106,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 11,
-        "loss": 0.0112,
-        "roc_auc": 0.574,
-        "pr_auc": 0.0994,
-        "hard_neg_threshold": 0.0812,
-        "hard_neg_max_prob": 0.1107,
-        "hard_neg_count": 245
-      },
-      {
-        "epoch": 12,
-        "loss": 0.0123,
-        "roc_auc": 0.5733,
-        "pr_auc": 0.0991,
-        "hard_neg_threshold": 0.0815,
-        "hard_neg_max_prob": 0.1107,
-        "hard_neg_count": 245
-      }
-    ],
-    "fold_2": [
-      {
-        "epoch": 1,
-        "loss": 0.0343,
-        "roc_auc": 0.6255,
-        "pr_auc": 0.0561,
-        "hard_neg_threshold": 0.2313,
-        "hard_neg_max_prob": 0.4449,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 2,
-        "loss": 0.0201,
-        "roc_auc": 0.618,
-        "pr_auc": 0.0572,
-        "hard_neg_threshold": 0.0949,
-        "hard_neg_max_prob": 0.2287,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 3,
-        "loss": 0.0131,
-        "roc_auc": 0.5688,
-        "pr_auc": 0.0424,
-        "hard_neg_threshold": 0.0954,
-        "hard_neg_max_prob": 0.136,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 4,
-        "loss": 0.0135,
-        "roc_auc": 0.6003,
-        "pr_auc": 0.0472,
-        "hard_neg_threshold": 0.1483,
-        "hard_neg_max_prob": 0.2177,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 5,
-        "loss": 0.0137,
-        "roc_auc": 0.7005,
-        "pr_auc": 0.0805,
-        "hard_neg_threshold": 0.0963,
-        "hard_neg_max_prob": 0.1602,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 6,
-        "loss": 0.0109,
-        "roc_auc": 0.7185,
-        "pr_auc": 0.0886,
-        "hard_neg_threshold": 0.0965,
-        "hard_neg_max_prob": 0.1542,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 7,
-        "loss": 0.0124,
-        "roc_auc": 0.7196,
-        "pr_auc": 0.093,
-        "hard_neg_threshold": 0.1046,
-        "hard_neg_max_prob": 0.1638,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 8,
-        "loss": 0.0104,
-        "roc_auc": 0.7419,
-        "pr_auc": 0.1167,
-        "hard_neg_threshold": 0.11,
-        "hard_neg_max_prob": 0.1819,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 9,
-        "loss": 0.0112,
-        "roc_auc": 0.7578,
-        "pr_auc": 0.1352,
-        "hard_neg_threshold": 0.1123,
-        "hard_neg_max_prob": 0.1948,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 10,
-        "loss": 0.0112,
-        "roc_auc": 0.7611,
-        "pr_auc": 0.1375,
-        "hard_neg_threshold": 0.1134,
-        "hard_neg_max_prob": 0.2011,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 11,
-        "loss": 0.0108,
-        "roc_auc": 0.7611,
-        "pr_auc": 0.1389,
-        "hard_neg_threshold": 0.1136,
-        "hard_neg_max_prob": 0.204,
-        "hard_neg_count": 487
-      },
-      {
-        "epoch": 12,
-        "loss": 0.0117,
-        "roc_auc": 0.7611,
-        "pr_auc": 0.1392,
-        "hard_neg_threshold": 0.1137,
-        "hard_neg_max_prob": 0.2048,
-        "hard_neg_count": 487
-      }
-    ],
-    "fold_3": [
-      {
-        "epoch": 1,
-        "loss": 0.0324,
-        "roc_auc": 0.7022,
-        "pr_auc": 0.1038,
-        "hard_neg_threshold": 0.1751,
-        "hard_neg_max_prob": 0.4128,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 2,
-        "loss": 0.0154,
-        "roc_auc": 0.5328,
-        "pr_auc": 0.0454,
-        "hard_neg_threshold": 0.1595,
-        "hard_neg_max_prob": 0.2694,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 3,
-        "loss": 0.0127,
-        "roc_auc": 0.6808,
-        "pr_auc": 0.1122,
-        "hard_neg_threshold": 0.0951,
-        "hard_neg_max_prob": 0.2179,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 4,
-        "loss": 0.0121,
-        "roc_auc": 0.6559,
-        "pr_auc": 0.1235,
-        "hard_neg_threshold": 0.111,
-        "hard_neg_max_prob": 0.2036,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 5,
-        "loss": 0.0114,
-        "roc_auc": 0.8071,
-        "pr_auc": 0.2159,
-        "hard_neg_threshold": 0.1088,
-        "hard_neg_max_prob": 0.28,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 6,
-        "loss": 0.0127,
-        "roc_auc": 0.7744,
-        "pr_auc": 0.2502,
-        "hard_neg_threshold": 0.1166,
-        "hard_neg_max_prob": 0.2282,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 7,
-        "loss": 0.0116,
-        "roc_auc": 0.7538,
-        "pr_auc": 0.2286,
-        "hard_neg_threshold": 0.1214,
-        "hard_neg_max_prob": 0.2562,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 8,
-        "loss": 0.0116,
-        "roc_auc": 0.7576,
-        "pr_auc": 0.2415,
-        "hard_neg_threshold": 0.1124,
-        "hard_neg_max_prob": 0.2412,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 9,
-        "loss": 0.011,
-        "roc_auc": 0.7757,
-        "pr_auc": 0.2571,
-        "hard_neg_threshold": 0.1131,
-        "hard_neg_max_prob": 0.2357,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 10,
-        "loss": 0.0115,
-        "roc_auc": 0.7834,
-        "pr_auc": 0.2726,
-        "hard_neg_threshold": 0.1151,
-        "hard_neg_max_prob": 0.2409,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 11,
-        "loss": 0.0116,
-        "roc_auc": 0.7882,
-        "pr_auc": 0.2803,
-        "hard_neg_threshold": 0.1139,
-        "hard_neg_max_prob": 0.2458,
-        "hard_neg_count": 730
-      },
-      {
-        "epoch": 12,
-        "loss": 0.0109,
-        "roc_auc": 0.789,
-        "pr_auc": 0.2821,
-        "hard_neg_threshold": 0.1135,
-        "hard_neg_max_prob": 0.2471,
-        "hard_neg_count": 730
-      }
-    ]
-  },
-  "hard_negative_mining_results": {
-    "fold_1": "threshold dropped 0.374 \u2192 0.082 (5.5\u00d7 improvement). Max neg prob dropped 0.521 \u2192 0.111.",
-    "fold_2": "threshold dropped 0.231 \u2192 0.114 (2\u00d7). Max neg prob dropped 0.445 \u2192 0.205. PR-AUC improved 0.056 \u2192 0.139.",
-    "fold_3": "threshold dropped 0.175 \u2192 0.114. Max neg prob dropped 0.413 \u2192 0.247. PR-AUC improved 0.104 \u2192 0.282 (2.7\u00d7)."
-  },
-  "conclusion": "ROC-AUC of 0.81 is confirmed as a real baseline on 20K subset. Full 590K training projects to 0.90+. PR-AUC of 0.28 (best fold) confirms headroom for further improvement via more data and longer training."
+  "conclusion": "ROC-AUC of 0.8594 achieved on full 590K dataset. Mean ROC-AUC 0.8523 across 3 folds. PR-AUC of 0.4223 confirms strong fraud detection capability. Path to 0.90+: 30+ epochs with early stopping and hyperparameter tuning."
 }

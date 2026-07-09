@@ -2,27 +2,22 @@
 VAJRA AI - IEEE-CIS FRAUD DETECTION - TRAINING METRICS
 ======================================================================
 
-Date: 2026-07-09T18:50:03.845515
+Date: 2026-07-10T01:07:00.940888
 Model: TabularTransformer (827,473 params)
-Dataset: 20,000 rows (fraud rate: 0.0281)
-Features: 37 cat + 449 num
+Dataset: 590,540 rows (full dataset, fraud rate: 0.0281)
+Features: 40 cat + 449 num
 
 CROSS-VALIDATION RESULTS (Expanding Window)
 ----------------------------------------
-  fold_1: ROC-AUC=0.7035, PR-AUC=0.0887
-  fold_2: ROC-AUC=0.7611, PR-AUC=0.1392
-  fold_3: ROC-AUC=0.8071, PR-AUC=0.2159
+  fold_1: ROC-AUC=0.8388, PR-AUC=0.4083
+  fold_2: ROC-AUC=0.8594, PR-AUC=0.4223
+  fold_3: ROC-AUC=0.8587, PR-AUC=0.4087
 
-  Mean ROC-AUC: 0.7573
-  Mean PR-AUC:  0.1479
-  Best ROC-AUC: 0.8071 (Fold 3)
-
-HARD NEGATIVE MINING IMPACT
-----------------------------------------
-  fold_1: threshold dropped 0.374 → 0.082 (5.5× improvement). Max neg prob dropped 0.521 → 0.111.
-  fold_2: threshold dropped 0.231 → 0.114 (2×). Max neg prob dropped 0.445 → 0.205. PR-AUC improved 0.056 → 0.139.
-  fold_3: threshold dropped 0.175 → 0.114. Max neg prob dropped 0.413 → 0.247. PR-AUC improved 0.104 → 0.282 (2.7×).
+  Mean ROC-AUC: 0.8523
+  Mean PR-AUC:  0.4131
+  Best ROC-AUC: 0.8594 (Fold 2)
 
 CONCLUSION
 ----------------------------------------
-ROC-AUC of 0.81 is confirmed as a real baseline on 20K subset. Full 590K training projects to 0.90+. PR-AUC of 0.28 (best fold) confirms headroom for further improvement via more data and longer training.
+ROC-AUC of 0.8594 achieved on full 590K dataset.
+Path to 0.90+: 30+ epochs + early stopping + hyperparameter tuning.
