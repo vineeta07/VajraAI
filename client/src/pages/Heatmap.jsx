@@ -37,12 +37,12 @@ export default function Heatmap() {
     return (
         <div className="space-y-6">
             <div className="sm:flex sm:items-center sm:justify-between">
-                <h1 className="text-2xl font-semibold text-gray-900">Risk Visualizations</h1>
+                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Risk Visualizations</h1>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                     <select
                         value={riskFilter}
                         onChange={(e) => setRiskFilter(e.target.value)}
-                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     >
                         <option value="">All Risks</option>
                         <option value="HIGH">High Risk</option>
@@ -55,23 +55,23 @@ export default function Heatmap() {
                 <div>Loading visualisations...</div>
             ) : (
                 <div className="grid grid-cols-1 gap-6">
-                    <div className="bg-white p-6 shadow rounded-lg">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Geographic Risk Map</h3>
+                    <div className="p-6 shadow rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Geographic Risk Map</h3>
                         <RiskMap data={locationData} />
                     </div>
 
-                    <div className="bg-white p-6 shadow rounded-lg">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Risk by Department</h3>
+                    <div className="p-6 shadow rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Risk by Department</h3>
                         <RiskBarChart data={deptData} />
                     </div>
 
-                    <div className="bg-white p-6 shadow rounded-lg">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Risk by Location</h3>
+                    <div className="p-6 shadow rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Risk by Location</h3>
                         <RiskBarChart data={locationData} />
                     </div>
 
-                    <div className="bg-white p-6 shadow rounded-lg">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Risk Over Time</h3>
+                    <div className="p-6 shadow rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Risk Over Time</h3>
                         <RiskBarChart data={timeData} />
                     </div>
                 </div>

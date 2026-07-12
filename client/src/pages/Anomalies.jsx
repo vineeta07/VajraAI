@@ -37,9 +37,9 @@ export default function Anomalies() {
 
     const riskColor = (risk) => {
         switch (risk) {
-            case 'HIGH': return 'bg-red-100 text-red-800';
-            case 'MEDIUM': return 'bg-yellow-100 text-yellow-800';
-            default: return 'bg-green-100 text-green-800';
+            case 'HIGH': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+            case 'MEDIUM': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+            default: return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
         }
     };
 
@@ -47,10 +47,10 @@ export default function Anomalies() {
         <div className="space-y-6">
             <div className="sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">Detected Anomalies</h1>
+                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Detected Anomalies</h1>
                     {locationFilter && (
                         <div className="mt-1 flex items-center">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-400">
                                 Location: {locationFilter}
                                 <button
                                     type="button"
@@ -74,7 +74,7 @@ export default function Anomalies() {
                             <select
                                 value={filter}
                                 onChange={(e) => setFilter(e.target.value)}
-                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             >
                                 <option value="">All Risks</option>
                                 <option value="HIGH">High Risk</option>
@@ -89,36 +89,36 @@ export default function Anomalies() {
             <div className="flex flex-col">
                 <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                            <table className="min-w-full divide-y divide-gray-300">
-                                <thead className="bg-gray-50">
+                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:ring-white/10 md:rounded-lg">
+                            <table className="min-w-full divide-y divide-gray-300 dark:divide-slate-700">
+                                <thead className="bg-gray-50 dark:bg-slate-800">
                                     <tr>
-                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Transaction ID</th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Vendor</th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Amount</th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Risk Level</th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Reason</th>
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6">Transaction ID</th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Vendor</th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Risk Level</th>
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Reason</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
+                                <tbody className="divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
                                     {loading ? (
-                                        <tr><td colSpan="6" className="p-4 text-center">Loading...</td></tr>
+                                        <tr><td colSpan="6" className="p-4 text-center text-gray-900 dark:text-white">Loading...</td></tr>
                                     ) : anomalies.length === 0 ? (
-                                        <tr><td colSpan="6" className="p-4 text-center">No anomalies found.</td></tr>
+                                        <tr><td colSpan="6" className="p-4 text-center text-gray-900 dark:text-white">No anomalies found.</td></tr>
                                     ) : (
                                         anomalies.map((item) => (
-                                            <tr key={item.transaction_id} className="hover:bg-gray-50 cursor-pointer transition-colors" role="button" onClick={() => window.location.href = `/anomalies/${item.transaction_id}`}>
-                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-600 sm:pl-6">
+                                            <tr key={item.transaction_id} className="hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer transition-colors" role="button" onClick={() => window.location.href = `/anomalies/${item.transaction_id}`}>
+                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-600 dark:text-indigo-400 sm:pl-6">
                                                     #{item.transaction_id}
                                                 </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400">
                                                     {item.vendor_name}
                                                 </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400">
                                                     ${Number(item.amount).toLocaleString()}
                                                 </td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400">
                                                     {new Date(item.transaction_date).toLocaleDateString()}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm">
@@ -126,10 +126,8 @@ export default function Anomalies() {
                                                         {item.risk_level}
                                                     </span>
                                                 </td>
-                                                <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
-                                                    <div className="flex items-center text-xs text-indigo-500 hover:text-indigo-700">
-                                                        View Details &rarr;
-                                                    </div>
+                                                <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" title={item.reason ? (typeof item.reason === 'string' ? item.reason : JSON.stringify(item.reason)) : "No reason provided"}>
+                                                    {item.reason ? (Array.isArray(item.reason) ? item.reason.join(', ') : item.reason) : "View Details \u2192"}
                                                 </td>
                                             </tr>
                                         ))

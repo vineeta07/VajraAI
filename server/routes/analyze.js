@@ -53,6 +53,10 @@ router.post("/", async (req, res) => {
 
   } catch (err) {
     console.error("Analysis error:", err.message);
+    require('fs').writeFileSync('error.log', err.stack || err.message);
+    if (err.response) {
+       require('fs').appendFileSync('error.log', '\n' + JSON.stringify(err.response.data));
+    }
     res.status(500).json({ error: "Fraud analysis failed" });
   }
 });

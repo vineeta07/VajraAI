@@ -1,34 +1,35 @@
-import { Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Upload from './pages/Upload';
-import Analyze from './pages/Analyze';
-import Anomalies from './pages/Anomalies';
-import AnomalyDetail from './pages/AnomalyDetail';
-import Heatmap from './pages/Heatmap';
-import Vendors from './pages/Vendors';
-import VendorDetail from './pages/VendorDetail';
+import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { ThemeProvider as MuiThemeProvider } from "./theme/theme-provider";
+import { ThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { routesSection } from "./routes/sections";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import "./global.css";
+
+function AppRoutes() {
+  const routing = useRoutes(routesSection);
+  return routing;
+}
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/analyze" element={<Analyze />} />
-        <Route path="/anomalies" element={<Anomalies />} />
-        <Route path="/anomalies/:id" element={<AnomalyDetail />} />
-        <Route path="/heatmap" element={<Heatmap />} />
-        <Route path="/vendors" element={<Vendors />} />
-        <Route path="/vendors/:id" element={<VendorDetail />} />
-      </Route>
-    </Routes>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <MuiThemeProvider>
+            <AuthProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </AuthProvider>
+          </MuiThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

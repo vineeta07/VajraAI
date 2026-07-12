@@ -24,14 +24,14 @@ export default function AnomalyDetail() {
         fetchTransaction();
     }, [id]);
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading details...</div>;
-    if (!transaction) return <div className="p-8 text-center text-red-500">Transaction not found</div>;
+    if (loading) return <div className="p-8 text-center text-gray-500 dark:text-gray-400">Loading details...</div>;
+    if (!transaction) return <div className="p-8 text-center text-red-500 dark:text-red-400">Transaction not found</div>;
 
     const riskColor = (risk) => {
         switch (risk) {
-            case 'HIGH': return 'bg-red-100 text-red-800 border-red-200';
-            case 'MEDIUM': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-            default: return 'bg-green-100 text-green-800 border-green-200';
+            case 'HIGH': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-900/50';
+            case 'MEDIUM': return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-900/50';
+            default: return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-900/50';
         }
     };
 
@@ -41,19 +41,19 @@ export default function AnomalyDetail() {
         <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <button
                 onClick={() => navigate('/anomalies')}
-                className="mb-6 inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
+                className="mb-6 inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back to Anomalies
             </button>
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div className="bg-white dark:bg-slate-900 shadow overflow-hidden sm:rounded-lg border border-transparent dark:border-slate-800">
                 <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
                             Transaction Details
                         </h3>
-                        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                        <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
                             ID: #{transaction.id}
                         </p>
                     </div>
@@ -61,47 +61,47 @@ export default function AnomalyDetail() {
                         {transaction.risk_level} Risk
                     </span>
                 </div>
-                <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                    <dl className="sm:divide-y sm:divide-gray-200">
+                <div className="border-t border-gray-200 dark:border-slate-800 px-4 py-5 sm:p-0">
+                    <dl className="sm:divide-y sm:divide-gray-200 dark:sm:divide-slate-800">
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Vendor</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{transaction.vendor_name} ({transaction.vendor_id})</dd>
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendor</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.vendor_name} ({transaction.vendor_id})</dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Amount</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 text-lg font-semibold">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Amount</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2 text-lg font-semibold">
                                 ${Number(transaction.amount).toLocaleString()}
                             </dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Department</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{transaction.department}</dd>
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Department</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.department}</dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Location</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{transaction.location}</dd>
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.location}</dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Date</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
                                 {new Date(transaction.transaction_date).toLocaleDateString()}
                             </dd>
                         </div>
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">Anomaly Score</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Anomaly Score</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
                                 {Number(transaction.anomaly_score).toFixed(4)}
                             </dd>
                         </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                            <dt className="text-sm font-medium text-gray-500 flex items-center">
-                                <Info className="h-4 w-4 mr-2 text-indigo-500" />
+                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-slate-800/50">
+                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                <Info className="h-4 w-4 mr-2 text-indigo-500 dark:text-indigo-400" />
                                 AI Analysis
                             </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
                                 <ul className="list-disc pl-5 space-y-1">
                                     {reasons.map((r, idx) => (
-                                        <li key={idx} className="text-gray-700">{r}</li>
+                                        <li key={idx} className="text-gray-700 dark:text-gray-300">{r}</li>
                                     ))}
                                 </ul>
                             </dd>

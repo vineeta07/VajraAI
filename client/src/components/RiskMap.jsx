@@ -101,7 +101,7 @@ export default function RiskMap({ data }) {
 
     return (
         <div className="flex flex-col space-y-2">
-            <div className="h-[400px] w-full rounded-lg overflow-hidden border border-gray-200 shadow-sm z-0 relative">
+            <div className="h-[400px] w-full rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 shadow-sm z-0 relative">
                 <MapContainer
                     center={[20.5937, 78.9629]} // Default center (India)
                     zoom={3}
@@ -138,8 +138,8 @@ export default function RiskMap({ data }) {
                 </MapContainer>
             </div>
             {unmappedCities.length > 0 && (
-                <div className="text-sm text-gray-500 bg-yellow-50 p-2 rounded border border-yellow-100">
-                    <strong>Note:</strong> Some locations could not be placed on the map: {unmappedCities.map(c => c.name).join(', ')}.
+                <div className="text-sm text-gray-500 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded border border-yellow-100 dark:border-yellow-900/50">
+                    <strong className="dark:text-yellow-500">Note:</strong> Some locations could not be placed on the map: {unmappedCities.map(c => c.name).join(', ')}.
                 </div>
             )}
         </div>

@@ -1,13 +1,8 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-export default function ProtectedRoute({ children }) {
-    const { user } = useAuth();
-    const location = useLocation();
-
-    if (!user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-
-    return children;
+export default function ProtectedRoute({ children, allowedRoles }) {
+  // Bypassing auth for now per user request
+  return children;
 }

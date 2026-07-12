@@ -20,9 +20,7 @@ app.listen(PORT, () => {
 })
 
 app.use(cors({
-  origin: function(origin, callback) {
-    return callback(null, true);
-  },
+  origin: ['http://localhost:3039', 'http://127.0.0.1:3039'],
   credentials: true
 }));
 app.use(express.json());
