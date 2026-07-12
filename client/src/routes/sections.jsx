@@ -6,15 +6,15 @@ import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgr
 import { DashboardLayout } from "src/layouts/dashboard";
 import ProtectedRoute from "src/components/ProtectedRoute";
 
-export const DashboardPage = lazy(() => import("src/pages/dashboard"));
+export const DashboardPage = lazy(() => import("src/pages/Dashboard"));
 export const RecentFraudsPage = lazy(() => import("src/pages/FraudAlerts"));
 export const CitizensPage = lazy(() => import("src/pages/CitizensList"));
 export const RegistrationPage = lazy(() => import("src/pages/sign-in"));
 export const InvestigationPage = lazy(() => import("src/pages/products"));
 export const WhistleblowerPage = lazy(() => import("src/pages/whistleblower"));
 export const WhistleblowerReportsPage = lazy(() => import("src/pages/whistleblower-reports"));
-export const ProfilePage = lazy(() => import("src/pages/profile"));
-export const SettingsPage = lazy(() => import("src/pages/settings"));
+export const ProfilePage = lazy(() => import("src/pages/Profile"));
+export const SettingsPage = lazy(() => import("src/pages/Settings"));
 export const Page404 = lazy(() => import("src/pages/page-not-found"));
 export const HomePage = lazy(() => import("src/pages/Home"));
 export const LoginPage = lazy(() => import("src/pages/LoginPage"));
@@ -41,7 +41,7 @@ const renderFallback = () => (
         width: 1,
         maxWidth: 320,
         bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
-        [`& .${linearProgressClasses.bar}`]: { bgcolor: "text.primary" }
+        [ `& .${linearProgressClasses.bar}` ]: { bgcolor: "text.primary" }
       }}
     />
   </Box>
