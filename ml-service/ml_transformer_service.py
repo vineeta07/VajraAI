@@ -16,7 +16,7 @@ class PositionalEncoding(nn.Module):
         super().__init__()
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len).unsqueeze(1).float()
-        div_term = torch.ebxp(
+        div_term = torch.exp(
             torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model)
         )
         pe[:, 0::2] = torch.sin(position * div_term)
@@ -87,6 +87,11 @@ class TransactionInput(BaseModel):
 NUM_FEATURES = 5 # Amount, Freq, Avg, Cost_Variance, Bidding_Competition
 model = TransformerAutoencoder(num_features=NUM_FEATURES)
 model.eval()
+
+
+@app.get("/")
+def health():
+    return {"status": "ok", "service": "vajraai-ml"}
 
 scaler = StandardScaler()
 
@@ -165,7 +170,10 @@ def detect_anomalies(data: List[TransactionInput]):
             "risk_level": risk,
             # Return parsed derived info for debugging
             "derived_metrics": {
-                "overspend_ratio": float((data[i].amount - (data[i].estimated_cost or data[i].amount))),
+                # Fraction over the estimate: 0.5 means paid 50% more than estimated.
+                "overspend_ratio": float(
+                    (data[i].amount - data[i].estimated_cost) / data[i].estimated_cost
+                ) if data[i].estimated_cost else 0.0,
                 "bidders": data[i].num_bidders
             }
         })
