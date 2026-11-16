@@ -87,8 +87,9 @@ export default function PipelineStatus({ pipeline }) {
         <>
           {error?.detail || `Nothing answered at ${API_LABEL}.`}
           <Fix>
-            In a terminal, run <code>npm run dev</code> inside the <code>server</code> folder. If the API is hosted elsewhere, set{' '}
-            <code>VITE_API_URL</code> in <code>client/.env</code> and rebuild.
+            Running locally: run <code>npm run dev</code> inside the <code>server</code> folder. Deployed: set <code>VITE_API_URL</code> to the
+            API server’s address in the front-end host’s environment variables and redeploy the front end; if the server restricts origins
+            with <code>CLIENT_ORIGIN</code>, it must include this site’s address.
           </Fix>
         </>
       ),

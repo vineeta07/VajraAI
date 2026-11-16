@@ -13,22 +13,31 @@ const heatmapRoutes = require("./routes/heatmap");
 
 const { authenticate, authorize } = require("./middlewares/authMiddleware");
 
+const { pool } = require("./db/pool");
+const { ensureSchema } = require("./db/schema");
+
 const PORT = process.env.PORT || 3000;
+
+// Create the tables on boot so a fresh database works without a separate
+// setup step. If the database is unreachable the server still starts, and
+// /api/status reports the reason.
+ensureSchema(pool)
+    .then(() => console.log("Database tables ready"))
+    .catch((err) => console.error("Database not ready:", err.message));
 
 app.listen(PORT, () => {
     console.log(`Server running on PORT: ${PORT}`);
 })
 
-// CLIENT_ORIGIN: comma-separated list of allowed web origins in production.
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:3039,http://127.0.0.1:3039')
+// CLIENT_ORIGIN: comma-separated list of web origins allowed to call the API.
+// When it is not set, any origin is allowed; requests are authorised by bearer
+// token rather than cookies, so this does not expose a signed-in session.
+const allowedOrigins = (process.env.CLIENT_ORIGIN || '')
   .split(',')
-  .map((o) => o.trim())
+  .map((o) => o.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true }));
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true }));
 

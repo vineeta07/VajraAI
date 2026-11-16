@@ -2,14 +2,30 @@ import axios from 'axios';
 
 const root = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 export const API_BASE = `${root}/api`;
-export const API_LABEL = root ? API_BASE : 'http://localhost:3000/api (via the dev proxy)';
+export const API_LABEL = root
+  ? API_BASE
+  : import.meta.env.DEV
+    ? 'http://localhost:3000/api (via the dev proxy)'
+    : `${window.location.origin}/api`;
 
-export const api = axios.create({ baseURL: API_BASE, timeout: 20000 });
+export const api = axios.create({ baseURL: API_BASE, timeout: 60000 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
   if (token && token !== 'local-preview') config.headers.Authorization = `Bearer ${token}`;
   return config;
+});
+
+// A web page coming back from an API path means the request never reached the
+// API: the host served the app's own index.html instead.
+api.interceptors.response.use((response) => {
+  const type = String(response.headers?.['content-type'] || '');
+  if (type.includes('text/html')) {
+    const err = new Error('Received a web page instead of API data');
+    err.code = 'NOT_API';
+    throw err;
+  }
+  return response;
 });
 
 /**
@@ -20,13 +36,22 @@ export function describeError(error) {
   if (!error) return null;
   const res = error.response;
 
+  if (error.code === 'NOT_API') {
+    return {
+      kind: 'offline',
+      title: 'The app isn’t pointed at an API server',
+      detail: `Requests to ${API_LABEL} are answered by the website itself, not by the API. The front end was built without the API server’s address.`,
+      tech: 'VITE_API_URL is missing or wrong in the front-end build',
+    };
+  }
+
   if (!res) {
     if (error.code === 'ECONNABORTED' || /timeout/i.test(error.message || '')) {
       return {
         kind: 'timeout',
         title: 'The server took too long to answer',
         detail:
-          'The request was sent but no reply came back in time. The server may be starting up (free hosting tiers sleep when idle) or a database query may be stuck.',
+          `No reply came back from ${API_LABEL} within a minute. Free hosting tiers put idle servers to sleep, and waking one can take longer than that; try again shortly.`,
         tech: error.message,
       };
     }

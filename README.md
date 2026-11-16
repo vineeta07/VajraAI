@@ -47,7 +47,6 @@ DB_CONNECTION_STRING=postgresql://username:password@localhost:5432/hack4delhi
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=24h
 ML_SERVICE_URL=http://localhost:8000/detect
-CLIENT_ORIGIN=http://localhost:3039
 ```
 Run the database setup script (creates tables):
 ```bash
