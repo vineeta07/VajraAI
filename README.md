@@ -40,13 +40,14 @@ Install dependencies:
 ```bash
 npm install
 ```
-Create a `.env` file in the `server` directory based on `.env.sample`:
+Create a `.env` file in the `server` directory based on `.env.example`:
 ```env
 PORT=3000
 DB_CONNECTION_STRING=postgresql://username:password@localhost:5432/hack4delhi
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=24h
 ML_SERVICE_URL=http://localhost:8000/detect
+CLIENT_ORIGIN=http://localhost:3039
 ```
 Run the database setup script (creates tables):
 ```bash
@@ -105,17 +106,19 @@ To run the full application, you need to have three separate terminals open runn
     ```bash
     cd server && npm run dev
     ```
-3.  **Frontend Client** (Port 5173):
+3.  **Frontend Client** (Port 3039):
     ```bash
     cd client && npm run dev
     ```
 
-Open your browser and navigate to `http://localhost:5173` to use the application.
+Open your browser and navigate to `http://localhost:3039` to use the application.
 
 ## 📝 Usage Guide
 
-1.  **Login/Register**: Create an account to access the dashboard.
-2.  **Upload Data**: Go to the "Upload" page. You can upload JSON or CSV files containing transaction data.
-    *   *Tip*: Include `estimated_cost` and `num_bidders` columns in your CSV to enable advanced procurement fraud detection.
-3.  **Analyze**: Go to the "Analyze" page and click "Start Analysis" to run the ML model on the uploaded data.
-4.  **View Results**: Check the Dashboard for high-level stats, investigate the "Anomalies" list for specific red flags, or browse "Vendors" to see risk profiles.
+1.  **Sign in**: Create an account, or choose "Continue as a guest" to look around. A short walkthrough opens on your first sign-in; replay it any time from "Take the tour" in the top bar.
+2.  **Upload**: On "Upload & analyse", choose a JSON or CSV file. The columns are checked in the browser and any rows that will be skipped are listed before anything is saved.
+    *   *Tip*: Include `estimated_cost` and `num_bidders` columns to enable cost-overrun and single-bidder checks.
+3.  **Analyse**: On the same page, press "Run analysis" to score every stored transaction.
+4.  **Review**: "Overview" shows the totals, "Anomalies" is the ranked queue with the reasons for each flag, "Vendors" groups flags by payee, and "Risk map" shows where they cluster.
+
+If a page has nothing to show, it says why: the status indicator in the top bar and the checklist on the page name the missing step (server unreachable, database not connected, nothing uploaded, or analysis not run) and how to fix it.

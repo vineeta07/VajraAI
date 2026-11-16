@@ -24,6 +24,8 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Hooks and their providers live side by side in src/lib.
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])

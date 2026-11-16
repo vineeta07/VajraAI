@@ -1,93 +1,129 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
-import ThemeToggle from '../components/ThemeToggle';
-import { ShieldCheck, ArrowRight, UploadCloud, Activity, BarChart3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import Logo from '@/components/Logo';
+import ThemeToggle from '@/components/ThemeToggle';
+import { Button, RiskBadge } from '@/ui';
+import { useAuth } from '@/lib/auth';
+
+const STEPS = [
+  ['Upload', 'Bring in payment records as CSV or JSON. Columns are checked in your browser and bad rows are listed before anything is saved.'],
+  ['Analyse', 'A transformer autoencoder scores each payment against the rest; a rule engine adds checks for cost overruns and single-bidder awards.'],
+  ['Review', 'Work through a ranked queue. Every flag comes with the reasons behind it, the vendor’s history and where it happened.'],
+];
+
+// Illustrative rows for the product preview — not live data.
+const PREVIEW = [
+  ['#1042', 'TechNova Systems', 'IT · Mumbai', '₹98,00,000', 'HIGH', '133% over the sanctioned estimate; single bidder'],
+  ['#0977', 'GreenBuild Contractors', 'Public Works · Noida', '₹23,50,000', 'MEDIUM', 'Well above this vendor’s usual payment'],
+  ['#0871', 'Sunrise Medical Supplies', 'Health · Jaipur', '₹1,85,000', 'LOW', 'In line with past payments'],
+];
 
 export default function Home() {
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const cta = isAuthenticated ? '/dashboard' : '/login';
 
   return (
-    <>
-      <Helmet>
-        <title>VajraAI - Fraud Detection</title>
-      </Helmet>
+    <div className="flex min-h-screen flex-1 flex-col">
+      <title>VajraAI — find the public payments worth auditing</title>
+      <header className="mx-auto flex h-16 w-full max-w-[1120px] items-center justify-between px-6">
+        <Logo />
+        <nav className="flex items-center gap-1.5">
+          <ThemeToggle />
+          {!isAuthenticated && <Button variant="ghost" to="/register" className="hidden sm:inline-flex">Create account</Button>}
+          <Button variant="secondary" to={cta}>{isAuthenticated ? 'Open dashboard' : 'Sign in'}</Button>
+        </nav>
+      </header>
 
-      <div className="min-h-screen flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300">
-        
-        {/* Simple Header */}
-        <header className="flex items-center justify-between p-2 max-w-7xl mx-auto w-full">
-          <div className="flex items-center space-x-3">
-            <img src="/logo.png" alt="VajraAI Logo" className="w-14 h-14 object-contain" />
-            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-blue-600">
-              VajraAI
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <button 
-              onClick={() => navigate('/sign-in')}
-              className="px-5 py-2 text-sm font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors border border-slate-300 dark:border-slate-700"
-            >
-              Login
-            </button>
-          </div>
-        </header>
-
-        {/* Hero Content */}
-        <main className="flex flex-col items-center text-center max-w-4xl mx-auto w-full">
-          
-          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-4 leading-tight drop-shadow-[0_0_15px_rgba(6,182,212,0.6)]">
-            AI-Powered Public Fund <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">
-              Integrity Monitoring
-            </span>
-          </h1>
-          
-          <p className="text-xl text-slate-600 dark:text-slate-400 mb-6 max-w-2xl">
-            Detect anomalies, track vendor risks, and ensure complete transparency in government spending with real-time explainable AI.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10">
-            <button 
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center justify-center gap-2 px-8 py-4 text-base font-medium bg-gradient-to-r from-cyan-500 to-indigo-600 text-white rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)] hover:-translate-y-1"
-            >
-              Access Dashboard
-              <ArrowRight className="w-5 h-5" />
-            </button>
+      <main className="mx-auto w-full max-w-[1120px] flex-1 px-6">
+        <section className="grid items-center gap-12 pt-14 pb-20 lg:grid-cols-[1.05fr_1fr] lg:pt-24">
+          <div>
+            <div className="eyebrow mb-5">Public spending review</div>
+            <h1 className="font-serif text-[42px] leading-[1.08] font-semibold tracking-[-0.02em] text-ink sm:text-[56px]">
+              Find the payments worth auditing.
+            </h1>
+            <p className="mt-6 max-w-[520px] text-[17px] leading-relaxed text-ink-2">
+              VajraAI reads procurement and payment records, ranks each one by how irregular it looks, and explains every flag in plain language — so audit time goes where it matters.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <Button size="lg" to={cta}>
+                {isAuthenticated ? 'Open dashboard' : 'Get started'}
+                <ArrowRight className="size-4" />
+              </Button>
+              <a href="#how" className="inline-flex h-11 items-center px-3 text-[15px] font-medium text-ink-2 hover:text-ink">How it works</a>
+            </div>
           </div>
 
-          {/* Quick Guide Steps */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full text-left mt-2 pt-8">
-             <div className="flex flex-col gap-4 p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
-                <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                    <UploadCloud className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold">1. Upload Data</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Securely upload your transaction CSV files containing vendor payments and invoice details into the system.</p>
-             </div>
-             <div className="flex flex-col gap-4 p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
-                <div className="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
-                    <Activity className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold">2. Run Analysis</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Trigger the Transformer ML models to scan every record for overspending, bid-rigging, and anomalies.</p>
-             </div>
-             <div className="flex flex-col gap-4 p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
-                <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                    <BarChart3 className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold">3. Review Insights</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Navigate to the Investigation Portal and Heatmap to visually drill down into flagged geographical risks.</p>
-             </div>
-          </div>
-        </main>
+          <figure className="rounded-xl border border-line bg-surface shadow-pop" aria-label="Example of a review queue">
+            <div className="flex items-center justify-between border-b border-line px-5 py-3">
+              <span className="text-sm font-semibold text-ink">Review queue</span>
+              <span className="text-xs text-ink-3">Example</span>
+            </div>
+            <ul className="divide-y divide-line">
+              {PREVIEW.map(([id, vendor, meta, amount, risk, why]) => (
+                <li key={id} className="px-5 py-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2.5">
+                        <span className="font-mono text-xs text-ink-3">{id}</span>
+                        <span className="truncate text-sm font-medium text-ink">{vendor}</span>
+                      </div>
+                      <div className="mt-0.5 text-[13px] text-ink-3">{meta}</div>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <div className="num text-sm font-medium text-ink">{amount}</div>
+                      <div className="mt-1"><RiskBadge level={risk} /></div>
+                    </div>
+                  </div>
+                  <p className="mt-2.5 border-l-2 border-line-strong pl-3 text-[13px] text-ink-2">{why}</p>
+                </li>
+              ))}
+            </ul>
+          </figure>
+        </section>
 
-        <footer className="p-6 text-center text-sm text-slate-500 dark:text-slate-500">
-          &copy; {new Date().getFullYear()} VajraAI. All rights reserved.
-        </footer>
-      </div>
-    </>
+        <section id="how" className="scroll-mt-8 border-t border-line py-16">
+          <h2 className="font-serif text-[28px] font-semibold text-ink">Three steps, no setup wizard</h2>
+          <ol className="mt-10 grid gap-10 md:grid-cols-3">
+            {STEPS.map(([t, d], i) => (
+              <li key={t}>
+                <div className="num font-mono text-[13px] text-ink-3">0{i + 1}</div>
+                <h3 className="mt-2 text-[17px] font-semibold text-ink">{t}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-ink-2">{d}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="grid gap-10 border-t border-line py-16 md:grid-cols-2">
+          <div>
+            <h2 className="font-serif text-[28px] font-semibold text-ink">What it checks</h2>
+            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-2">
+              The score is relative: a payment is flagged because it doesn’t resemble the others in your data, not because it matches a fixed blacklist.
+            </p>
+          </div>
+          <dl className="divide-y divide-line border-y border-line">
+            {[
+              ['Unusual amounts', 'Payments far above a vendor’s own average'],
+              ['Cost overruns', 'Amount paid against the sanctioned estimate'],
+              ['Thin competition', 'Contracts awarded on a single bid'],
+              ['Payment clustering', 'Many payments to one vendor in a short span'],
+            ].map(([t, d]) => (
+              <div key={t} className="flex items-baseline justify-between gap-6 py-3.5">
+                <dt className="text-[15px] font-medium text-ink">{t}</dt>
+                <dd className="text-right text-sm text-ink-2">{d}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </main>
+
+      <footer className="border-t border-line">
+        <div className="mx-auto flex w-full max-w-[1120px] flex-wrap items-center justify-between gap-3 px-6 py-6 text-[13px] text-ink-3">
+          <span>© {new Date().getFullYear()} VajraAI</span>
+          <span>A flag is a reason to look, not a finding of wrongdoing.</span>
+          <Link to={cta} className="text-ink-2 hover:text-ink">{isAuthenticated ? 'Dashboard' : 'Sign in'}</Link>
+        </div>
+      </footer>
+    </div>
   );
 }

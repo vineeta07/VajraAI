@@ -1,87 +1,233 @@
-/** **************************************
-* Fonts: app
-*************************************** */
-@import '@fontsource-variable/dm-sans';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/source-serif-4/400.css';
+@import '@fontsource/source-serif-4/600.css';
 
-@import '@fontsource/barlow/400.css';
-@import '@fontsource/barlow/500.css';
-@import '@fontsource/barlow/600.css';
-@import '@fontsource/barlow/700.css';
-@import '@fontsource/barlow/800.css';
+@import 'tailwindcss';
 
-/** **************************************
-* Plugins
-*************************************** */
-/* scrollbar */
-@import './components/scrollbar/styles.css';
-
-/* chart */
-@import './components/chart/styles.css';
-
-/** **************************************
-* Baseline
-*************************************** */
-@import "tailwindcss";
-
-@config "../tailwind.config.js";
-
-/* Enable class-based dark mode */
 @custom-variant dark (&:is(.dark *));
 
-html {
-  height: 100%;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+/* ---------------------------------------------------------------
+   Tokens. Everything in the app reads from these; dark mode only
+   swaps the values.
+---------------------------------------------------------------- */
+:root {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --sunken: #f0ede6;
+  --line: #e3dfd5;
+  --line-strong: #cfc9bc;
+  --ink: #1b1a17;
+  --ink-2: #57534a;
+  --ink-3: #8a857a;
+
+  --accent: #1d4a3f;
+  --accent-hover: #163a31;
+  --accent-soft: #e4ede9;
+  --on-accent: #ffffff;
+
+  --high: #a83c2b;
+  --high-soft: #f6e4df;
+  --medium: #9a6614;
+  --medium-soft: #f5ead2;
+  --low: #3f6b47;
+  --low-soft: #e3ede3;
+  --info: #2f5275;
+  --info-soft: #e3ebf3;
+
+  --shadow-pop: 0 1px 2px rgb(27 26 23 / 0.06), 0 12px 32px -8px rgb(27 26 23 / 0.18);
+  color-scheme: light;
 }
 
-html,
-body {
-  margin: 0;
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 100%;
-  flex-direction: column;
-  background-color: #ffffff;
-  color: #0f172a;
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.dark {
+  --bg: #131311;
+  --surface: #1b1a18;
+  --sunken: #222120;
+  --line: #2e2c29;
+  --line-strong: #45423d;
+  --ink: #ece9e2;
+  --ink-2: #b1aca1;
+  --ink-3: #7f7a70;
+
+  --accent: #8fbfae;
+  --accent-hover: #a5cdbe;
+  --accent-soft: #1f2e2a;
+  --on-accent: #10201b;
+
+  --high: #e08672;
+  --high-soft: #3a211c;
+  --medium: #d9a54a;
+  --medium-soft: #362a14;
+  --low: #8fb894;
+  --low-soft: #1d2b1f;
+  --info: #8fb1d4;
+  --info-soft: #1b2733;
+
+  --shadow-pop: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -8px rgb(0 0 0 / 0.6);
+  color-scheme: dark;
 }
 
-.dark,
-.dark body {
-  background-color: #020617;
-  color: #f8fafc;
+@theme inline {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-high: var(--high);
+  --color-high-soft: var(--high-soft);
+  --color-medium: var(--medium);
+  --color-medium-soft: var(--medium-soft);
+  --color-low: var(--low);
+  --color-low-soft: var(--low-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --shadow-pop: var(--shadow-pop);
 }
 
-#root,
-#root__layout {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 100%;
-  flex-direction: column;
+@layer base {
+  html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'cv05';
+  }
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  button,
+  [role='button'],
+  a {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  code,
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+  }
 }
 
-img {
-  max-width: 100%;
-  vertical-align: middle;
+@utility num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum', 'zero';
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+@utility eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-input[type='number'] {
-  -moz-appearance: textfield;
-  appearance: none;
+/* Leaflet, restyled to match */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--sunken);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-pop);
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.leaflet-bar a {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.leaflet-bar a:hover {
+  background: var(--sunken);
+  color: var(--ink);
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+  color: var(--ink-3) !important;
+}
+.leaflet-control-attribution a {
+  color: var(--ink-2) !important;
+}
+.dark .leaflet-tile-pane {
+  filter: brightness(0.9) contrast(0.95);
 }
 
-input[type='number']::-webkit-outer-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animate-rise {
+  animation: rise 0.28s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+@utility animate-shimmer {
+  animation: shimmer 1.4s ease-in-out infinite;
 }
 
-input[type='number']::-webkit-inner-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

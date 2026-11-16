@@ -13,6 +13,7 @@ router.get("/", async (req, res) => {
               COUNT(t.id) AS total_transactions,
               COALESCE(SUM(t.amount), 0) AS total_amount,
               COUNT(a.id) AS flagged_count,
+              COUNT(CASE WHEN a.risk_level IN ('HIGH', 'MEDIUM') THEN 1 END) AS medium_high_count,
               COUNT(CASE WHEN a.risk_level = 'HIGH' THEN 1 END) AS high_risk_count
             FROM transactions t
             LEFT JOIN anomaly_results a ON t.id = a.transaction_id
@@ -38,6 +39,7 @@ router.get("/:id", async (req, res) => {
               COUNT(t.id) AS total_transactions,
               COALESCE(SUM(t.amount), 0) AS total_amount,
               COUNT(a.id) AS flagged_count,
+              COUNT(CASE WHEN a.risk_level IN ('HIGH', 'MEDIUM') THEN 1 END) AS medium_high_count,
                COUNT(CASE WHEN a.risk_level = 'HIGH' THEN 1 END) AS high_risk_count
             FROM transactions t
             LEFT JOIN anomaly_results a ON t.id = a.transaction_id

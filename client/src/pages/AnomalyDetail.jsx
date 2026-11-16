@@ -1,114 +1,120 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, CheckCircle, Info } from 'lucide-react';
-import clsx from 'clsx';
+import { Link, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft } from 'lucide-react';
+import { Button, Card, CardHeader, RiskBadge, Skeleton } from '@/ui';
+import Notice, { ErrorNotice } from '@/components/Notice';
+import { describeError, fetchAnomaly } from '@/lib/api';
+import { formatDate, formatDateTime, formatINR } from '@/lib/format';
+
+function Row({ label, children }) {
+  return (
+    <div className="flex items-baseline justify-between gap-6 px-5 py-3">
+      <dt className="shrink-0 text-sm text-ink-3">{label}</dt>
+      <dd className="min-w-0 text-right text-sm text-ink">{children}</dd>
+    </div>
+  );
+}
+
+const lead = {
+  HIGH: 'This transaction is among the most unusual in the dataset and should be audited first.',
+  MEDIUM: 'This transaction is unusual enough to warrant a second look.',
+  LOW: 'This transaction looks routine compared with the rest of the dataset.',
+};
 
 export default function AnomalyDetail() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [transaction, setTransaction] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const query = useQuery({ queryKey: ['anomaly', id], queryFn: () => fetchAnomaly(id), retry: false });
+  const a = query.data;
+  const back = (
+    <Link to="/anomalies" className="mb-5 inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-2 hover:text-ink">
+      <ArrowLeft className="size-4" /> Anomalies
+    </Link>
+  );
 
-    useEffect(() => {
-        const fetchTransaction = async () => {
-            try {
-                const res = await axios.get(`/api/anomalies/${id}`);
-                setTransaction(res.data);
-            } catch (error) {
-                console.error("Error fetching transaction details", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchTransaction();
-    }, [id]);
-
-    if (loading) return <div className="p-8 text-center text-gray-500 dark:text-gray-400">Loading details...</div>;
-    if (!transaction) return <div className="p-8 text-center text-red-500 dark:text-red-400">Transaction not found</div>;
-
-    const riskColor = (risk) => {
-        switch (risk) {
-            case 'HIGH': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-900/50';
-            case 'MEDIUM': return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-900/50';
-            default: return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-900/50';
-        }
-    };
-
-    const reasons = Array.isArray(transaction.reason) ? transaction.reason : [transaction.reason];
-
+  if (query.isPending) {
+    return <>{back}<Skeleton className="h-10 w-80" /><Skeleton className="mt-6 h-72 w-full" /></>;
+  }
+  if (query.isError) {
+    const e = describeError(query.error);
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <button
-                onClick={() => navigate('/anomalies')}
-                className="mb-6 inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-            >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back to Anomalies
-            </button>
-
-            <div className="bg-white dark:bg-slate-900 shadow overflow-hidden sm:rounded-lg border border-transparent dark:border-slate-800">
-                <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                            Transaction Details
-                        </h3>
-                        <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-                            ID: #{transaction.id}
-                        </p>
-                    </div>
-                    <span className={clsx("px-3 py-1 rounded-full text-sm font-semibold border", riskColor(transaction.risk_level))}>
-                        {transaction.risk_level} Risk
-                    </span>
-                </div>
-                <div className="border-t border-gray-200 dark:border-slate-800 px-4 py-5 sm:p-0">
-                    <dl className="sm:divide-y sm:divide-gray-200 dark:sm:divide-slate-800">
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendor</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.vendor_name} ({transaction.vendor_id})</dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Amount</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2 text-lg font-semibold">
-                                ${Number(transaction.amount).toLocaleString()}
-                            </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Department</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.department}</dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{transaction.location}</dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-                                {new Date(transaction.transaction_date).toLocaleDateString()}
-                            </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Anomaly Score</dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-                                {Number(transaction.anomaly_score).toFixed(4)}
-                            </dd>
-                        </div>
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50 dark:bg-slate-800/50">
-                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                <Info className="h-4 w-4 mr-2 text-indigo-500 dark:text-indigo-400" />
-                                AI Analysis
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-                                <ul className="list-disc pl-5 space-y-1">
-                                    {reasons.map((r, idx) => (
-                                        <li key={idx} className="text-gray-700 dark:text-gray-300">{r}</li>
-                                    ))}
-                                </ul>
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
-        </div>
+      <>
+        {back}
+        <Card>
+          {e.kind === 'not_found' ? (
+            <Notice title={`Transaction #${id} has no analysis result`} actions={<Button size="sm" variant="secondary" to="/anomalies">Back to the queue</Button>}>
+              Either this ID doesn’t exist, or it was uploaded after the last analysis and hasn’t been scored yet. Re-running the analysis replaces all previous results.
+            </Notice>
+          ) : (
+            <ErrorNotice error={e} onRetry={query.refetch} />
+          )}
+        </Card>
+      </>
     );
+  }
+
+  const reasons = Array.isArray(a.reason) ? a.reason : a.reason ? [a.reason] : [];
+  const est = a.estimated_cost != null ? Number(a.estimated_cost) : null;
+  const over = est && est > 0 ? (Number(a.amount) - est) / est : null;
+
+  return (
+    <>
+      <title>{`#${a.id} ${a.vendor_name} · VajraAI`}</title>
+      {back}
+      <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="mb-2 flex items-center gap-3">
+            <span className="font-mono text-[13px] text-ink-3">Transaction #{a.id}</span>
+            <RiskBadge level={a.risk_level} />
+          </div>
+          <h1 className="font-serif text-[30px] leading-tight font-semibold text-ink">{formatINR(a.amount)}</h1>
+          <p className="mt-1 text-[15px] text-ink-2">
+            paid to <Link to={`/vendors/${encodeURIComponent(a.vendor_id)}`} className="font-medium text-accent hover:underline">{a.vendor_name}</Link> on {formatDate(a.transaction_date)}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-5">
+        <Card className="lg:col-span-3">
+          <CardHeader title="Why it was flagged" hint={lead[a.risk_level]} />
+          {reasons.length === 0 ? (
+            <Notice compact title="No written reasons were recorded">The model produced a score for this transaction, but the rule engine didn’t attach an explanation.</Notice>
+          ) : (
+            <ol className="px-5 pb-5">
+              {reasons.map((r, i) => (
+                <li key={i} className="flex gap-3.5 border-t border-line py-3 first:border-t-0 first:pt-1">
+                  <span className="num mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-sunken text-[11px] font-semibold text-ink-2">{i + 1}</span>
+                  <span className="text-[15px] text-ink">{r}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader title="Record" />
+          <dl className="divide-y divide-line border-t border-line">
+            <Row label="Vendor ID"><span className="font-mono text-[13px]">{a.vendor_id}</span></Row>
+            <Row label="Department">{a.department || '—'}</Row>
+            <Row label="Location">{a.location || '—'}</Row>
+            <Row label="Estimated cost">
+              {est != null ? (
+                <>
+                  <span className="num">{formatINR(est)}</span>
+                  {over != null && Math.abs(over) >= 0.005 && (
+                    <span className={`num ml-2 text-[13px] ${over > 0 ? 'text-high' : 'text-low'}`}>{over > 0 ? '+' : ''}{Math.round(over * 100)}% vs paid</span>
+                  )}
+                </>
+              ) : <span className="text-ink-3">Not provided in upload</span>}
+            </Row>
+            <Row label="Bidders">{a.num_bidders != null ? <span className="num">{a.num_bidders}</span> : <span className="text-ink-3">Not provided in upload</span>}</Row>
+            <Row label="Anomaly score"><span className="num font-mono text-[13px]">{Number(a.anomaly_score).toFixed(4)}</span></Row>
+            <Row label="Analysed">{formatDateTime(a.detected_at)}</Row>
+          </dl>
+          <p className="border-t border-line px-5 py-3 text-[13px] text-ink-3">
+            The score is the model’s reconstruction error: the higher it is, the less this payment resembles the others. It is relative to the uploaded dataset, not an absolute probability of fraud.
+          </p>
+        </Card>
+      </div>
+    </>
+  );
 }

@@ -35,6 +35,7 @@ We will use a Blueprint to deploy the Node.js server, PostgreSQL database, and P
     *   **Environment Variables**:
         *   `VITE_API_URL`: Paste the URL of your deployed Backend Server from Render (e.g., `https://hack4delhi-server.onrender.com`). *Do not include a trailing slash.*
 5.  Click **Deploy**.
+6.  Back in Render, set `CLIENT_ORIGIN` on the backend server to your Vercel URL (e.g., `https://your-app.vercel.app`) so the browser is allowed to call the API.
 
 ## Part 3: Verification
 
