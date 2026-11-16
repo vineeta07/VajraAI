@@ -27,13 +27,23 @@ export function analysisFailure(error, pipeline) {
     return { ...e, title: 'There is nothing to analyse', detail: 'No transactions are stored yet. Upload a file first.' };
   }
   if (e.kind === 'server') {
+    const body = error.response?.data;
+    // Newer servers say exactly what went wrong.
+    if (body?.detail && body.stage) {
+      return {
+        ...e,
+        title: body.stage === 'ml' ? 'The scoring model could not be used' : 'The analysis could not be saved',
+        detail: body.detail,
+        tech: null,
+      };
+    }
     const mlDown = pipeline?.data?.ml === false;
     return {
       ...e,
       title: 'The analysis could not be completed',
       detail: mlDown
         ? 'The scoring model didn’t answer. The server passes every transaction to the Python ML service, and that service is not reachable right now.'
-        : 'The server failed while scoring. This almost always means the Python ML service isn’t running or ML_SERVICE_URL in server/.env points to the wrong place.',
+        : 'The server failed while scoring. This almost always means the Python ML service isn’t running or ML_SERVICE_URL on the server points to the wrong place.',
     };
   }
   return e;

@@ -1,18 +1,13 @@
 const { Router } = require("express");
 const axios = require("axios");
 const { pool } = require("../db/pool");
+const { mlDetectUrl } = require("../services/mlService");
 
 const router = Router();
 
 function mlBaseUrl() {
-  let url = process.env.ML_SERVICE_URL;
-  if (!url) return null;
-  if (!url.startsWith("http")) url = `http://${url}`;
-  try {
-    return new URL(url).origin;
-  } catch {
-    return null;
-  }
+  const url = mlDetectUrl();
+  return url ? new URL(url).origin : null;
 }
 
 // Reports whether each part of the pipeline is working, so the client can
@@ -45,7 +40,7 @@ router.get("/", async (req, res) => {
   if (out.ml.url) {
     try {
       // Any HTTP answer, even a 404, means the service is up.
-      await axios.get(out.ml.url, { timeout: 2500, validateStatus: () => true });
+      await axios.get(out.ml.url, { timeout: 4000, validateStatus: () => true });
       out.ml.ok = true;
     } catch {
       out.ml.ok = false;
